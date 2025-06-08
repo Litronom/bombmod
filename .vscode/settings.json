@@ -1,0 +1,10 @@
+{
+    "files.associations": {
+        "*.embeddedhtml": "html",
+        ".fantomasignore": "ignore",
+        "*.mus": "arm",
+        "stdio.h": "c",
+        "gamevars.h": "c"
+    },
+    "C_Cpp.errorSquiggles": "disabled"
+}
