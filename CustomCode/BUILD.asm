@@ -18,20 +18,21 @@
 
 .include "CustomCode/GameVars/GameVars.asm"
 
+.org 0x401F4
+JAL UpdateRenderFrame_Hook
 
 .org 0x6A858
 JAL PlayerMovement_Hook
 
-.org 0x1E88
-//.org 0x241C
+.org 0x2374
 JAL CUSTOM_DMA-ROM_RAM_OFFSET
-NOP
 
 .org CUSTOM_DMA
 
+
 ADDIU SP, SP, -0x18 //allocate stack space
 SW RA, 0x0014 (SP) //push ra to the stack
-JAL	0x80002A70
+JAL	0x80000450
 NOP
 LUI A2, 0x007B //A2 = PAYLOAD_ROM (source)
 ADDIU A2, A2, 0x75B0 //A2 = PAYLOAD_ROM (source) + offset

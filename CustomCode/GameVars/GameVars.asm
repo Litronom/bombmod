@@ -1,6 +1,7 @@
 .definelabel PlayerMovement, 0x8024E088
 .definelabel EndLevel, 0x8023E8AC
 
+.definelabel LevelLoaderData, 0x802AC5D0
 .definelabel LevelClassData, 0x800A3F00
 .definelabel ObjectData, 0x800A0DF0
 .definelabel PlayerData, 0x800AEDF0
@@ -11,12 +12,13 @@
 
 .definelabel enemies_defeated_count, 0x800BC520
 
+.definelabel common_shadow_model_scale, 0x802A2DE4
 
 
 
+.definelabel LoadModelInRAM, 0x802310F4
 
-
-
+.definelabel UpdateRenderFrame, 0x8023A104
 
 .definelabel D_80024820, 0x80024820
 .definelabel D_80019F90, 0x80019F90
