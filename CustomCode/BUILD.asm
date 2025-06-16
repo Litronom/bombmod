@@ -18,6 +18,14 @@
 
 .include "CustomCode/GameVars/GameVars.asm"
 
+.org 0xA1808
+J EnemyAllocate
+NOP
+NOP
+NOP
+NOP
+
+
 .org 0x401F4
 JAL UpdateRenderFrame_Hook
 

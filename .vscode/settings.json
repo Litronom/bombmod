@@ -4,7 +4,16 @@
         ".fantomasignore": "ignore",
         "*.mus": "arm",
         "stdio.h": "c",
-        "gamevars.h": "c"
+        "gamevars.h": "c",
+        "defvars.h": "c",
+        "struct.h": "c",
+        "algorithm": "c",
+        "limits": "c",
+        "utility": "c",
+        "xutility": "c",
+        "customstruct.h": "c",
+        "sfxvars.h": "c",
+        "maininclude.h": "c"
     },
     "C_Cpp.errorSquiggles": "disabled"
 }
