@@ -6,7 +6,8 @@
 bool isCustomVarsInitialized = false; // Flag to check if custom variables are initialized
 float PlayerScale[4] ALIGN16 = {1.0f, 1.0f, 1.0f, 1.0f}; // Player scale for each player
 ControllerEX ControllerInputsEX[4] ALIGN16; // Extended Controller inputs for each player
-int soundID = 0;
+int modelID = OBJ_MODEL_ENM_TOTEM;
+int modelbehavior = 7;
 
 // Function to compute extended controller inputs
 void ComputeControllerInputsEX()
@@ -46,35 +47,46 @@ void GlobalUpdate()
 
 		if (g_ControllerInputs[i].Button & BTN_B)
 		{
+			//g_Players[i].ComputationLevelClass->CollisionPointer->flag |= 0x0810; // Bomberman Bounces
+			g_Players[i].ComputationLevelClass->CollisionPointer->flag |= 0x1010; // Bomberman Bounces
 			ply->position[1] += 15.0f; // Move player up when B is pressed
 		}
 
 		for (int u = 0; u < 3; u++)
 		{
 			ply->scale[u] = PlayerScale[i]; // Apply scale to player object
+			g_Players[i].ComputationLevelClass->CollisionPointer->radius = 30.0f * PlayerScale[i];
 		}
 	}
 
 	if (ControllerInputsEX[0].ButtonPressed & BTN_DUP)
 	{
-		soundID++;;
+		modelID++;
+	}
+	if (ControllerInputsEX[0].ButtonPressed & BTN_DRIGHT)
+	{
+		modelbehavior++;
 	}
 
 	if (ControllerInputsEX[0].ButtonPressed & BTN_DDOWN)
 	{
-		soundID--;
+		modelID--;
 	}
-
 	if (ControllerInputsEX[0].ButtonPressed & BTN_DLEFT)
 	{
-		PlayGlobalSound(soundID);
+		modelbehavior--;
+	}
+
+	if (ControllerInputsEX[0].ButtonPressed & BTN_L)
+	{
+		g_LevelLoader.flag = 1;
 	}
 
 }
 
 void InitCustomVars()
 {
-	g_common_shadow_model_scale = 3.0f;
+	//g_common_shadow_model_scale = 3.0f;
 }
 
 /*
@@ -119,11 +131,18 @@ void PlayerMovement_Hook(int num)
 		PlayerScale[num] -= 0.05f; // scale player down when Z is pressed
 	}
 
-	if (ControllerInputsEX[num].ButtonPressed & BTN_L)
+	if (ControllerInputsEX[num].ButtonPressed & BTN_CUP)
 	{
-		PlayLocalSound(SFX_BM_PIECE_OF_CAKE, ply->position[0], ply->position[1], ply->position[2]);
-	}
+		float fLocX = ply->position[0] + 50.0f;
+		float fLocY = ply->position[1] + 10.0f;
+		float fLocZ = ply->position[2] + 100.0f;
 
+		int locX = *(int*)&fLocX;
+		int locY = *(int*)&fLocY;
+		int locZ = *(int*)&fLocZ;
+
+		SpawnPlayerBomb(g_Players[num].bomb_type, locX, locY, locZ, num);
+	}
 
 	// Test
 	// g_Players[num].bomb_type = enemies_defeated_count % 5;
@@ -132,6 +151,6 @@ void PlayerMovement_Hook(int num)
 
 void EnemyAllocate(int ID, int Behaviour, int Model)
 {
-	g_EnemySlots[ID].behaviour = 0x12; // Set all enemies to snowman behavior
-	g_EnemySlots[ID].modelID = 0xF0; // Set all enemies to snowman model
+	g_EnemySlots[ID].behaviour = modelbehavior;
+	g_EnemySlots[ID].modelID = modelID;
 }

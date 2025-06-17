@@ -22,7 +22,7 @@
 #define SFX_BM_HUGH_EFFECT				0x195
 #define SFX_BM_AUGH_EFFECT				0x196
 
-#define SFX_BM_YA						0x1A2
+#define SFX_BM_YAAA						0x1A2
 #define SFX_BM_PHEW						0x1A3
 #define SFX_BM_YAY						0x1A4
 #define SFX_BM_YES						0x1A5

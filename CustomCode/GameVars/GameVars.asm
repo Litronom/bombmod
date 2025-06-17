@@ -12,6 +12,7 @@
 .definelabel g_GameState, 0x802AC610
 .definelabel g_Bombs, 0x8008F4C0
 .definelabel g_EnemySlots, 0x800BA8E8
+.definelabel g_ContainerObjectSlots, 0x802B0190
 .definelabel g_GlobalPlayerState, 0x802AC9E0
 .definelabel g_SoundChannels, 0x800BD778
 
@@ -33,6 +34,7 @@
 .definelabel AdditionalUpdate, 0x80247614
 .definelabel FinalizeFrameUpdate, 0x80239094
 
+.definelabel SpawnPlayerBomb, 0x80273F30
 .definelabel PickupGem, 0x802794FC
 .definelabel PlayGlobalSound, 0x8026C660
 .definelabel PlayLocalSound, 0x8026C51C

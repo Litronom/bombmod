@@ -131,6 +131,8 @@ typedef struct ModelEntry
 	int *Unk31;				 // Offset: 0x7C
 } ModelEntry;
 
+typedef struct Object Object;
+
 typedef struct Object
 {
 	int num;
@@ -161,13 +163,17 @@ typedef struct Object
 	// not finalized
 } Object;
 
+#define OBJECT_FLAG_VISIBLE 0x0001
+
+typedef struct LevelClass LevelClass;
+
 typedef struct LevelClass
 {
 	int num;
 	int type;
 	int u1;
 	int u2;
-	int u3;
+	int flag;
 	int u4;
 	int u5;
 	int u6;
@@ -176,11 +182,11 @@ typedef struct LevelClass
 	int u9;
 	int u10;
 	int u11;
-	float unk_float1;
+	float radius;
 	float unk_float2;
 	int u12;
 	Object *ObjectPointer; // Pointer to the Object this LevelClass is spawning
-	long unk_pointer1;
+	LevelClass *CollisionPointer; // Pointer to the collision LevelClass
 	int u13;
 	float unk_vector[3];
 	int u14[6];
@@ -244,11 +250,13 @@ typedef struct GlobalPlayerState
 #define IS_IN_CUTSCENE			0x02000000
 
 // Bomb Types
-#define BOMB_TYPE_NORMAL		0
-#define BOMB_TYPE_RED			1
-#define BOMB_TYPE_REMOTE		2
-#define BOMB_TYPE_RED_REMOTE	3
-#define BOMB_TYPE_NORMAL_RED	4
+#define BOMB_TYPE_NORMAL		0x0000
+#define BOMB_TYPE_RED			0x0001
+#define BOMB_TYPE_REMOTE		0x0002
+#define BOMB_TYPE_NORMAL_RED	0x0004
+#define BOMB_TYPE_FULL_POWER	0x0100
+#define BOMB_TYPE_DEFAULT		0x0200
+#define BOMB_TYPE_HUGE			0x0800
 
 // Virus Types
 #define VIRUS_TYPE_NONE			0x00
@@ -265,8 +273,7 @@ typedef struct Player
 	int flag;
 	int heart_count;
 	short u1;
-	char u2;
-	char bomb_type;
+	short bomb_type;
 	int bomb_count;
 	int u4;
 	int control_type;			  // 0 = None, 1 = Player, 2 = AI, 3 = Dead (No Input)
@@ -293,7 +300,7 @@ typedef struct Player
 	int u16[5];
 	int timerA;
 	int u17[7];
-	LevelClass *ShadowLevelClass;
+	LevelClass *ComputationLevelClass;
 	int u20[3];
 	float unknown_float1;
 	int u21;
@@ -356,6 +363,17 @@ typedef struct Bomb
 	int unk_flag3;
 	float unk_float2[4];
 } Bomb;
+
+#define CONTAINER_BILLBOARD 0x2000
+
+typedef struct ContainerObjectAlloc
+{
+	short modelID;
+	short collisionType;
+	short u1;
+	short u2;
+	int flag;
+} ContainerObjectAlloc;
 
 typedef struct EnemyAlloc
 {

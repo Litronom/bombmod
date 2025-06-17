@@ -6,3 +6,8 @@
 typedef	unsigned short	ushort;
 typedef	unsigned int	uint;
 typedef	unsigned long	ulong;
+
+union {
+    float f;
+    uint32_t i;
+} float2hex;

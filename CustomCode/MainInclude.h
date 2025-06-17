@@ -11,5 +11,6 @@
 #include "GameVars/DefVars.h"
 #include "GameVars/GameVars.h"
 #include "GameVars/SfxVars.h"
+#include "GameVars/ObjectVars.h"
 
 #endif

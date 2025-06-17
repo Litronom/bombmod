@@ -14,6 +14,8 @@ extern uint g_ControllerBufferIndex[4]; //0x802AC5A8
 extern Game g_GameState; //0x802AC610
 extern Bomb g_Bombs[]; //0x8008F4C0
 extern EnemyAlloc g_EnemySlots[6]; //0x800BA8E8
+extern ContainerObjectAlloc g_ContainerObjectSlots[4]; //0x802B0190
+
 extern GlobalPlayerState g_GlobalPlayerState; //0x802AC9E0
 extern SFXChannel g_SoundChannels[8]; //0x800BD778
 
@@ -35,6 +37,7 @@ extern void UpdateRenderFrame(); //0x802259F4
 extern void AdditionalUpdate(); //0x80247614
 extern void FinalizeFrameUpdate(); //0x80239094
 
+extern void SpawnPlayerBomb(int bombType, int float_locX, int float_locY, int float_locZ, int playerID); //0x80273F30
 extern void PickupGem(); //0x802794FC
 //extern void PlayGlobalSound(int soundID, LevelClass *class); //0x8026C660
 extern void PlayGlobalSound(int soundID); //0x8026C660
