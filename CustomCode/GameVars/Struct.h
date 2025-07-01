@@ -7,20 +7,20 @@
 #define CONT_PLUGGED_OUT 0x8000
 
 // Button Flags
-#define BTN_A			0x8000
-#define BTN_B			0x4000
-#define BTN_Z			0x2000
-#define BTN_START		0x1000
-#define BTN_DUP			0x0800
-#define BTN_DDOWN		0x0400
-#define BTN_DLEFT		0x0200
-#define BTN_DRIGHT		0x0100
-#define BTN_L			0x0020
-#define BTN_R			0x0010
-#define BTN_CUP			0x0008
-#define BTN_CDOWN		0x0004
-#define BTN_CLEFT		0x0002
-#define BTN_CRIGHT		0x0001
+#define BTN_A           0x8000
+#define BTN_B           0x4000
+#define BTN_Z           0x2000
+#define BTN_START       0x1000
+#define BTN_DUP         0x0800
+#define BTN_DDOWN       0x0400
+#define BTN_DLEFT       0x0200
+#define BTN_DRIGHT      0x0100
+#define BTN_L           0x0020
+#define BTN_R           0x0010
+#define BTN_CUP         0x0008
+#define BTN_CDOWN       0x0004
+#define BTN_CLEFT       0x0002
+#define BTN_CRIGHT      0x0001
 
 typedef struct Controller
 {
@@ -53,15 +53,15 @@ typedef struct LevelLoader
 	int spawnID;	 // Offset: 0x08
 	int levelIDCopy; // Offset: 0x0C
 	int spawnIDCopy; // Offset: 0x10
-	int u1;			 // Offset: 0x14
-	int u2;			 // Offset: 0x18
-	int u3;			 // Offset: 0x1C
-	int u4;			 // Offset: 0x20
+	int u1;             // Offset: 0x14
+	int u2;             // Offset: 0x18
+	int u3;             // Offset: 0x1C
+	int u4;             // Offset: 0x20
 	float u5;		 // Offset: 0x24
-	int u6;			 // Offset: 0x28
-	int u7;			 // Offset: 0x2C
-	int u8;			 // Offset: 0x30
-	int u9;			 // Offset: 0x34
+	int u6;             // Offset: 0x28
+	int u7;             // Offset: 0x2C
+	int u8;             // Offset: 0x30
+	int u9;             // Offset: 0x34
 	int u10;		 // Offset: 0x38
 	int u11;		 // Offset: 0x3C
 	int u12;		 // Offset: 0x40
@@ -72,63 +72,63 @@ typedef struct LevelLoader
 
 typedef struct ModelData
 {
-	int modelFlags;				  // Offset: 0x00
-	int Unk04;					  // Offset: 0x04
-	int Unk08;					  // Offset: 0x08
+	int modelFlags;            	  // Offset: 0x00
+	int Unk04;            		  // Offset: 0x04
+	int Unk08;            		  // Offset: 0x08
 	int visibilityAnimationFlags; // Offset: 0x0C
-	float posX;					  // Offset: 0x10
-	float posY;					  // Offset: 0x14
-	float posZ;					  // Offset: 0x18
-	float rotX;					  // Offset: 0x1C
-	float rotY;					  // Offset: 0x20
-	float rotZ;					  // Offset: 0x22
-	float scaleX;				  // Offset: 0x24
-	float scaleY;				  // Offset: 0x28
-	float scaleZ;				  // Offset: 0x2C
-	int Unk30;					  // Offset: 0x30
-	int Unk34;					  // Offset: 0x34
-	int Unk38;					  // Offset: 0x38
-	int *modelPtr;				  // Offset: 0x3C
-	int Unk40;					  // Offset: 0x40
-	int Unk44;					  // Offset: 0x44
-	int Unk48;					  // Offset: 0x48
-	int Unk4C;					  // Offset: 0x4C
+	float posX;            		  // Offset: 0x10
+	float posY;            		  // Offset: 0x14
+	float posZ;            		  // Offset: 0x18
+	float rotX;            		  // Offset: 0x1C
+	float rotY;            		  // Offset: 0x20
+	float rotZ;            		  // Offset: 0x22
+	float scaleX;            	  // Offset: 0x24
+	float scaleY;            	  // Offset: 0x28
+	float scaleZ;            	  // Offset: 0x2C
+	int Unk30;            		  // Offset: 0x30
+	int Unk34;            		  // Offset: 0x34
+	int Unk38;            		  // Offset: 0x38
+	int *modelPtr;            	  // Offset: 0x3C
+	int Unk40;            		  // Offset: 0x40
+	int Unk44;            		  // Offset: 0x44
+	int Unk48;            		  // Offset: 0x48
+	int Unk4C;            		  // Offset: 0x4C
 } ModelData;
 
 typedef struct ModelEntry
 {
-	int ID;					 // Offset: 0x00
-	int Unk1;				 // Offset: 0x04
-	int Unk2;				 // Offset: 0x08
-	int Unk3;				 // Offset: 0x0C
-	int Unk4;				 // Offset: 0x10
-	int Unk5;				 // Offset: 0x14
-	int Unk6;				 // Offset: 0x18
-	int Unk7;				 // Offset: 0x1C
-	int Unk8;				 // Offset: 0x20
-	int Unk9;				 // Offset: 0x24
-	int Unk10;				 // Offset: 0x28
-	int Unk11;				 // Offset: 0x2C
-	int Unk12;				 // Offset: 0x30
-	float Unk13;			 // Offset: 0x34
-	float Unk14;			 // Offset: 0x38
-	int Unk15;				 // Offset: 0x3C
+	int ID;            		 // Offset: 0x00
+	int Unk1;            	 // Offset: 0x04
+	int Unk2;            	 // Offset: 0x08
+	int Unk3;            	 // Offset: 0x0C
+	int Unk4;            	 // Offset: 0x10
+	int Unk5;            	 // Offset: 0x14
+	int Unk6;            	 // Offset: 0x18
+	int Unk7;            	 // Offset: 0x1C
+	int Unk8;            	 // Offset: 0x20
+	int Unk9;            	 // Offset: 0x24
+	int Unk10;            	 // Offset: 0x28
+	int Unk11;            	 // Offset: 0x2C
+	int Unk12;            	 // Offset: 0x30
+	float Unk13;             // Offset: 0x34
+	float Unk14;             // Offset: 0x38
+	int Unk15;            	 // Offset: 0x3C
 	ModelData *ModelDataPtr; // Offset: 0x40
-	int Unk17;				 // Offset: 0x44
-	int Unk18;				 // Offset: 0x48
-	int Unk19;				 // Offset: 0x4C
-	int Unk20;				 // Offset: 0x50
-	int Unk21;				 // Offset: 0x54
-	const float X;			 // Offset: 0x58
-	const float Y;			 // Offset: 0x5C
-	const float Z;			 // Offset: 0x60
-	int Unk25;				 // Offset: 0x64
-	int Unk26;				 // Offset: 0x68
+	int Unk17;            	 // Offset: 0x44
+	int Unk18;            	 // Offset: 0x48
+	int Unk19;            	 // Offset: 0x4C
+	int Unk20;            	 // Offset: 0x50
+	int Unk21;            	 // Offset: 0x54
+	const float X;             // Offset: 0x58
+	const float Y;             // Offset: 0x5C
+	const float Z;             // Offset: 0x60
+	int Unk25;            	 // Offset: 0x64
+	int Unk26;            	 // Offset: 0x68
 	float VelocityY;		 // Offset: 0x6C
-	float Unk28;			 // Offset: 0x70
-	float Unk29;			 // Offset: 0x74
-	int *Unk30;				 // Offset: 0x78
-	int *Unk31;				 // Offset: 0x7C
+	float Unk28;             // Offset: 0x70
+	float Unk29;             // Offset: 0x74
+	int *Unk30;            	 // Offset: 0x78
+	int *Unk31;            	 // Offset: 0x7C
 } ModelEntry;
 
 typedef struct Object Object;
@@ -138,32 +138,30 @@ typedef struct Object
 	int num;
 	int num2;
 	int u1;
-	int u2;
+	short u2;
+	short modelID;
 	float position[3];
 	float angle[3];
 	float scale[3];
 	short visible;
 	short u7;
 	int u8;
-	int u9;
-	int u10;
-	int u11;
-	float unk_float1;
-	float unk_float2;
-	int u12;
-	long unk_pointer1;
-	int u13;
-	float unk_vector[3];
-	int u14[6];
-	float unk_float3;
-	float unk_float4;
-	long unk_pointer2;
-	long unk_pointer3;
-
-	// not finalized
+	long modelData_pointer;
+	long animation_pointer1;
+	long animation_pointer2;
+	long animation_pointer3;
+	long animation_pointer4;
 } Object;
 
 #define OBJECT_FLAG_VISIBLE 0x0001
+
+typedef struct CustomParts
+{
+	int customHeadID;
+	int customBodyID;
+	int customArmsID;
+	int customLegsID;
+} CustomParts;
 
 typedef struct LevelClass LevelClass;
 
@@ -234,38 +232,43 @@ typedef struct GlobalPlayerState
 	float unknown_float2;
 } GlobalPlayerState;
 
+
 // Player Flag
-#define IS_ON_SLOPE				0x00000010
-#define DISALLOW_USER_INPUT		0x00000020
-#define THROWING_OBJECT			0x00000040
-#define PICKING_UP_OBJECT		0x00000080
-#define KICKING_BOMB			0x00000100
-#define HAS_BOMB_BELOW			0x00000200
-#define CUTSCENE_MOVEMENT		0x00000400
-#define IS_KNOCKED_OUT			0x00001000
-#define HAS_OBJECT_IN_HAND		0x00008000
-#define IS_INTANGIBLE			0x00010000
-#define IS_HURT_SPINNING		0x00020000
-#define CAN_ONLY_TURN			0x00400000
-#define IS_IN_CUTSCENE			0x02000000
+#define IS_ON_SLOPE             0x00000010
+#define DISALLOW_USER_INPUT     0x00000020
+#define THROWING_OBJECT         0x00000040
+#define PICKING_UP_OBJECT       0x00000080
+#define KICKING_BOMB            0x00000100
+#define HAS_BOMB_BELOW          0x00000200
+#define CUTSCENE_MOVEMENT       0x00000400
+#define IS_KNOCKED_OUT          0x00001000
+#define HAS_OBJECT_IN_HAND      0x00008000
+#define IS_INTANGIBLE           0x00010000
+#define IS_HURT_SPINNING        0x00020000
+#define CAN_ONLY_TURN           0x00400000
+#define IS_IN_CUTSCENE          0x02000000
 
 // Bomb Types
-#define BOMB_TYPE_NORMAL		0x0000
-#define BOMB_TYPE_RED			0x0001
-#define BOMB_TYPE_REMOTE		0x0002
-#define BOMB_TYPE_NORMAL_RED	0x0004
-#define BOMB_TYPE_FULL_POWER	0x0100
-#define BOMB_TYPE_DEFAULT		0x0200
-#define BOMB_TYPE_HUGE			0x0800
+#define BOMB_TYPE_NORMAL        0x0000
+#define BOMB_TYPE_RED           0x0001
+#define BOMB_TYPE_REMOTE        0x0002
+#define BOMB_TYPE_NORMAL_RED    0x0004
+#define BOMB_TYPE_FULL_POWER    0x0100
+#define BOMB_TYPE_DEFAULT       0x0200
+#define BOMB_TYPE_HUGE          0x0800
 
 // Virus Types
-#define VIRUS_TYPE_NONE			0x00
-#define VIRUS_TYPE_FAST			0x01
-#define VIRUS_TYPE_STUCK		0x02
-#define VIRUS_TYPE_SLOW			0x04
-#define VIRUS_TYPE_NO_BOMBS		0x08
-#define VIRUS_TYPE_INVERTED		0x20
-#define VIRUS_TYPE_ON_FIRE		0x80
+#define VIRUS_TYPE_NONE         0x00
+#define VIRUS_TYPE_FAST         0x01
+#define VIRUS_TYPE_STUCK        0x02
+#define VIRUS_TYPE_SLOW         0x04
+#define VIRUS_TYPE_NO_BOMBS     0x08
+#define VIRUS_TYPE_INVERTED     0x20
+#define VIRUS_TYPE_ON_FIRE      0x80
+
+// Player Move Speeds
+#define PLAYER_MOVE_SPEED_WALK  21.0f
+#define PLAYER_MOVE_SPEED_RUN   60.0f
 
 typedef struct Player
 {
@@ -276,7 +279,7 @@ typedef struct Player
 	short bomb_type;
 	int bomb_count;
 	int u4;
-	int control_type;			  // 0 = None, 1 = Player, 2 = AI, 3 = Dead (No Input)
+	int control_type;              // 0 = None, 1 = Player, 2 = AI, 3 = Dead (No Input)
 	LevelClass *PlayerLevelClass; // Pointer to the LevelClass this Player is controlling
 	int u6;
 	LevelClass *OtherClass;
@@ -320,13 +323,44 @@ typedef struct Game
 	int time_elapsed;
 	float delta_time;
 	int seconds_elapsed;
-	int u11;
-	int u12;
-	int u13;
-	int u14;
-	int u15;
-	// more possibly here
+	int u8[6];
 } Game;
+
+#define CUSTOM_ID_KNIGHT    01
+#define CUSTOM_ID_DRAGON    02
+#define CUSTOM_ID_IRON      03
+#define CUSTOM_ID_CAT       04
+#define CUSTOM_ID_GIRL      05
+#define CUSTOM_ID_COOL      06
+#define CUSTOM_ID_CHICKEN   07
+#define CUSTOM_ID_SAMURAI   08
+#define CUSTOM_ID_CLOWN     09
+#define CUSTOM_ID_GOLD      10
+
+typedef struct VSGame
+{
+	int menuSelection; //0 Single Battle, 1 Team Battle, 2 Options
+	int controlType[4]; //0 Off, 1 MAN, 2 COM, 3 CUSTOM, 4 NOTHING
+	int levelCOM[4]; //0-2
+	int battleCount;
+	int timeLimit; //6 Infinite
+	int minutesLeft;
+	int secondsLeft;
+	int nextSecondFrameTimer;
+	int isSuddenDeathEnabled;
+	int isGhostEnabled;
+	int isCustomToggled[4];
+	CustomParts customParts[4];
+	int teamAssignment[4]; //0 Blue Team, 1 Red Team
+	int selectedLevel;
+	int playerWinScore[4];
+	int playerState[4]; //0 Alive, 2 Dead, 8 CPU
+	char customVerifyNumbersP1[9];
+	char customVerifyNumbersP2[9];
+	char customVerifyNumbersP3[9];
+	char customVerifyNumbersP4[9];
+	// more possibly here
+} VSGame;
 
 typedef struct Bomb
 {
@@ -364,6 +398,14 @@ typedef struct Bomb
 	float unk_float2[4];
 } Bomb;
 
+typedef struct ModelAlloc
+{
+	int modelID;
+	long modelData;
+	int u1;
+	int count;
+} ModelAlloc;
+
 #define CONTAINER_BILLBOARD 0x2000
 
 typedef struct ContainerObjectAlloc
@@ -384,8 +426,92 @@ typedef struct EnemyAlloc
 typedef struct SFXChannel
 {
 	float location[3]; // Location of the sound
-	bool isDirectional; // If true, the sound is directional (Unconfirmed)
+	int isDirectional; // If true, the sound is directional (Unconfirmed)
 	int soundID; // -1 = no sound allocated
 } SFXChannel;
+
+typedef struct CameraValues
+{
+	float aheadOffset;
+	float aheadChangeDelay;
+	float u1[4];
+	float downAngle;
+	float downAngleMapEdge;
+	float u2;
+	float u3;
+	float map;
+	float mapEdges;
+}
+CameraValues;
+
+// CPU Attack Types
+#define ATTACK_TYPE_BOMBERMAN   -1
+#define ATTACK_TYPE_SIRIUS_1    0
+#define ATTACK_TYPE_ARTEMIS     1
+#define ATTACK_TYPE_ORION       2
+#define ATTACK_TYPE_REGULUS     3
+#define ATTACK_TYPE_UNKNOWN     4
+#define ATTACK_TYPE_STOP        5
+#define ATTACK_TYPE_ALTAIR      6
+#define ATTACK_TYPE_SIRIUS_2    7
+#define ATTACK_TYPE_SIRIUS_3    8
+
+typedef struct ComputerPlayerMovement
+{
+	float moveDirection;
+	float f1;
+	float moveSpeed;
+	float f2;
+}
+ComputerPlayerMovement;
+
+typedef struct ComputerPlayerController
+{
+	int behaviorFlag;
+	int u1;
+	int u2;
+	int u3;
+	int u4;
+	int attackType;
+	LevelClass *pointer1;
+	LevelClass *pointer2;
+	float f1;
+	float f2;
+	float f3;
+	float f4;
+	float f5;
+	float f6;
+	int u5;
+	int u6;
+	int u7;
+	float f7;
+	float f8;
+	float f9;
+	int u8;
+	int u9;
+	int u10;
+	float f10;
+	float f11;
+	float f12;
+	int u11;
+	int u12;
+	int u13;
+	int u14;
+	int u15;
+	float f13;
+	float f14;
+	int u16;
+	int u17;
+	int u18;
+	int u19;
+	int u20;
+	long unknown_pointer;
+	ComputerPlayerMovement *moveDirection;
+	int uValues[32];
+	int behaviorTimer;
+	int u21;
+}
+ComputerPlayerController;
+
 
 #endif

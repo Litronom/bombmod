@@ -13,7 +13,7 @@
         "xutility": "c",
         "customstruct.h": "c",
         "sfxvars.h": "c",
-        "maininclude.h": "c"
+        "maininclude.h": "c",
     },
     "C_Cpp.errorSquiggles": "disabled"
 }

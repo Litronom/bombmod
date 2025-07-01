@@ -12,9 +12,12 @@ extern ControllerCopy g_ControllerInputsCopy[4]; //0x802AC410
 extern ControllerBuffer g_ControllerInputsBuffer[4][16]; //0x802AC428
 extern uint g_ControllerBufferIndex[4]; //0x802AC5A8
 extern Game g_GameState; //0x802AC610
+extern VSGame g_VSGameState; //0x802AC660
 extern Bomb g_Bombs[]; //0x8008F4C0
 extern EnemyAlloc g_EnemySlots[6]; //0x800BA8E8
 extern ContainerObjectAlloc g_ContainerObjectSlots[4]; //0x802B0190
+extern ComputerPlayerController g_ComputerPlayerController[4]; //0x800BCFE8
+extern ComputerPlayerMovement g_ComputerPlayerMovement[4]; //0x802ACF08
 
 extern GlobalPlayerState g_GlobalPlayerState; //0x802AC9E0
 extern SFXChannel g_SoundChannels[8]; //0x800BD778
@@ -22,6 +25,8 @@ extern SFXChannel g_SoundChannels[8]; //0x800BD778
 extern int g_enemies_defeated_count; //0x800BC520
 extern uint g_playerFlagBitField; //0x802AC9E8
 extern int g_PauseFlag; //0x802A0B80
+extern int g_frameCounter8; //0x802A13C0
+extern int g_gameFrameCounter; //0x802A13C4
 
 extern char g_ControllerCount; //0x800270A1
 extern float g_common_shadow_model_scale; //0x802A2DE4
@@ -43,10 +48,28 @@ extern void PickupGem(); //0x802794FC
 extern void PlayGlobalSound(int soundID); //0x8026C660
 extern void PlayLocalSound(int soundID, float locX, float locY, float locZ); //0x8026C51C
 
+extern CameraValues g_CameraValues; //0x80090000
 
+extern int g_VSPlayerSelectionID; //0x8004A328
+extern int g_VSPlayerSubSelectionID; //0x8004A32C
+extern int g_VSPlayerTeamSelectionID; //0x8004A330
+
+extern void func_8027A640(); //0x8027A640
 extern int D_80019F90; //0x80019F90
 extern void D_80024820(); //0x80024820
 extern void PAYLOAD_RAM(); //0x80024820
 extern void func_80000870(); //0x80000870
 extern void func_80001A30(unsigned int *table, unsigned int* func); //0x80001A30
 extern void load_from_rom_to_addr(void* arg0, signed int arg1, unsigned int arg2); //0x80000698
+
+extern ModelAlloc g_LevelModelAllocations[100]; //0x800A7F30
+extern int g_ModelAllocCount; //0x802AFC30
+
+extern int g_AllocateModel(int modelID); //0x8026CE28
+extern int g_GetModelIndex(int modelID1, int modelID2); //0x8026CD24
+extern void g_InitModel(int param); //0x802267E0
+extern int g_LoadModel(int modelID, int flag); //0x80226604
+extern void g_PrepareModelBuffer(int* dst, int size, int flag, int modelHandle); //0x8022616C
+extern int g_ProcessModelBuffer(int buffer); //0x802998EC
+extern void g_RegisterModel(int modelHandle, int processed, int buffer); //0x80292BD0
+extern void g_FinalizeModel(int modelHandle); //0x80226368
