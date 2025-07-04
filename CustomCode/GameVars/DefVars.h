@@ -15,11 +15,10 @@ typedef	unsigned long	ulong;
 #define TGL_FLAG(n, f) ((n) ^= (f)) 
 #define CHK_FLAG(n, f) ((n) & (f))
 
-/*
-union {
+typedef union {
     float f;
-    uint32_t i;
-} float2hex;
-*/
+    uint i;
+}
+hex2float;
 
 #endif

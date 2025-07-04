@@ -21,6 +21,15 @@
 .org 0x4B4E8
 JAL AllocateModel_Hook
 
+.org 0x8EF30
+JAL SpawnPlayerBomb_Hook
+
+.org 0x8F7BC
+JAL SpawnPlayerBomb_Hook
+
+.org 0x60554
+JAL SpawnPlayer_Hook
+
 /*
 .org 0xA1808
 J EnemyAllocate

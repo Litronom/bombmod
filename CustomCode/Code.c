@@ -6,7 +6,7 @@
 bool isCustomVarsInitialized = false; // Flag to check if custom variables are initialized
 ControllerEX ControllerInputsEX[4] ALIGN16; // Extended Controller inputs for each player
 
-int TestmodelID = OBJ_MODEL_ENM_TOTEM; //Test
+int TestmodelID = OBJ_MODEL_BOMB_BIG; //Test
 int modelbehavior = 7; //Test
 
 // Function to compute extended controller inputs
@@ -34,12 +34,12 @@ void GlobalUpdate()
 {
 	ComputeControllerInputsEX(); // Update the extended controller inputs
 
-
+	/*
 	for (int i = 0; i < 4; i++)
 	{
 		if (g_Players[i].PlayerLevelClass != 0)
 		{
-			g_Players[i].bomb_type = BOMB_TYPE_REMOTE;
+			g_Players[i].bombType = BOMB_TYPE_REMOTE;
 		}
 
 		// Battle Custom Parts equip!
@@ -54,8 +54,31 @@ void GlobalUpdate()
 		
 	}
 
+	bool PlayerLoaded = 0;
+
+	if (g_GameState.state == 0 && g_LevelLoader.flag == 0x91)
+	{
+		for (int i = 0; i < 100; i++)
+		{
+			if (g_LevelModelAllocations[i].modelID == OBJ_MODEL_PLAYER_BOMBERMAN)
+			{
+				PlayerLoaded = 1;
+				break;
+			}
+			
+		}
+		if (PlayerLoaded)
+		{
+			LoadCustomParts(g_VSGameState.customPartSetID[0],0, g_VSGameState.customParts[0].customHeadID);
+			LoadCustomParts(g_VSGameState.customPartSetID[0],0, g_VSGameState.customParts[0].customBodyID);
+			LoadCustomParts(g_VSGameState.customPartSetID[0],0, g_VSGameState.customParts[0].customArmsID);
+			LoadCustomParts(g_VSGameState.customPartSetID[0],0, g_VSGameState.customParts[0].customLegsID);
+		}
+	}
 
 
+	g_PlayMusicValidator = 0;
+	g_GameState.time_elapsed = TestmodelID;
 
 	if (ControllerInputsEX[0].ButtonPressed & BTN_DUP)
 	{
@@ -64,6 +87,7 @@ void GlobalUpdate()
 	if (ControllerInputsEX[0].ButtonPressed & BTN_DRIGHT)
 	{
 		modelbehavior++;
+		g_PlayGlobalSound(TestmodelID);
 	}
 
 	if (ControllerInputsEX[0].ButtonPressed & BTN_DDOWN)
@@ -72,14 +96,37 @@ void GlobalUpdate()
 	}
 	if (ControllerInputsEX[0].ButtonPressed & BTN_DLEFT)
 	{
-		modelbehavior--;
-	}
-
-	if (ControllerInputsEX[0].ButtonPressed & BTN_L)
-	{
-		g_LevelLoader.flag = 1;
+		for (int i = 0; i < 8; i++)
+		{
+			if (g_SoundFlags[i].playFlag != -1)
+			{
+				g_SoundFlags[i].controlFlag = 0x2000;
+			}	
+		}
+		
 	}
 	
+	for (int i = 1; i < 4; i++)
+	{
+		g_Players[i].bombType = g_Players[0].bombType;
+	}
+	*/	
+}
+
+void PlayerSpawning(int playerID)
+{
+	if (g_GameState.state == 0)
+	{
+		g_InitPlayerAssetPointers(g_Players[playerID].PlayerLevelClass->ObjectPointer,0xF);
+
+		g_EquipCustomPart(playerID, CUSTOM_PART_FACE, OBJ_MODEL_CUSTOM_CAT_HOOD);
+		g_EquipCustomPart(playerID, CUSTOM_PART_BELT, OBJ_MODEL_CUSTOM_CAT_TAIL);
+		g_EquipCustomPart(playerID, CUSTOM_PART_HAND_L, OBJ_MODEL_CUSTOM_CAT_PAWS_ARMS_L);
+		g_EquipCustomPart(playerID, CUSTOM_PART_HAND_R, OBJ_MODEL_CUSTOM_CAT_PAWS_ARMS_R);
+		g_EquipCustomPart(playerID, CUSTOM_PART_FOOT_L, OBJ_MODEL_CUSTOM_CAT_PAWS_LEGS_L);
+		g_EquipCustomPart(playerID, CUSTOM_PART_FOOT_R, OBJ_MODEL_CUSTOM_CAT_PAWS_LEGS_R);
+		g_EquipCustomPart(playerID, CUSTOM_PART_HEAD_BALL, OBJ_MODEL_CUSTOM_CAT_PAWS_LEGS_R);
+	}
 }
 
 void InitCustomVars()
@@ -105,7 +152,7 @@ void UpdateRenderFrame_Hook()
 
 void PlayerMovement_Hook(int num)
 {
-	PlayerMovement(num);
+	g_PlayerMovement(num);
 }
 
 
@@ -142,69 +189,4 @@ void ContainerObjAllocate(ContainerObjectAlloc* LevelContainers)
 		g_ContainerObjectSlots[i].flag = SET_FLAG(obj->flag, CONTAINER_BILLBOARD);
 	}
 */
-}
-
-int AllocateModel_Hook(int modelID)
-{
-	/*
-	//Just some model swap tests
-	if (ModelID == (OBJ_MODEL_PLAYER_BOMBERMAN))
-	{
-		ModelID = OBJ_MODEL_PLAYER_BOMBERMAN; // Change player model to Bomberman
-	}
-
-	if (ModelID == (OBJ_MODEL_MAP_UP_AND_DOWN1))
-	{
-		ModelID = OBJ_MODEL_MAP_UP_AND_DOWN_UNUSED;
-	}
-	if (ModelID == (OBJ_MODEL_MAP_UP_AND_DOWN2))
-	{
-		ModelID = OBJ_MODEL_MAP_UP_AND_DOWN_UNUSED;
-	}
-	if (ModelID == (OBJ_MODEL_MAP_UP_AND_DOWN_WATER_PLANE))
-	{
-		ModelID = 1;
-	}
-	if (ModelID == (OBJ_MODEL_BATTLE_FRAMED_STONE_BLOCK))
-	{
-		ModelID = OBJ_MODEL_BATTLE_BRICK_STONE_BLOCK;
-	}
-	if (ModelID == (OBJ_MODEL_BOMB_REMOTE))
-	{
-		ModelID = OBJ_MODEL_DRAGON_JET;
-	}
-	*/
-
-    if (modelID == -1)
-	{
-        return -1;
-    }
-
-    int index = g_GetModelIndex(modelID,modelID);
-
-	ModelAlloc* entry = &g_LevelModelAllocations[index];
-
-    if (entry->modelID != modelID)
-	{
-        // Model hasn't been allocated yet
-        g_ModelAllocCount++;
-        entry->modelID = modelID;
-
-        g_InitModel(0x18);
-
-        int modelHandle = g_LoadModel(modelID, 1);
-
-		int modelHandle2 = modelHandle;
-        int buffer;
-        g_PrepareModelBuffer(&buffer, 4, 1, modelHandle);
-
-        int processedModel = g_ProcessModelBuffer(buffer);
-        entry->modelData = processedModel;
-
-        g_RegisterModel(modelHandle2, processedModel, buffer);
-        g_FinalizeModel(modelHandle2);
-    }
-
-    entry->count += 1;
-	return entry->modelData;
 }

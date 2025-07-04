@@ -28,7 +28,8 @@ typedef struct Controller
 	ushort Button;
 	char AnalogX;
 	char AnalogY;
-} Controller;
+}
+Controller;
 
 typedef struct ControllerCopy
 {
@@ -36,7 +37,8 @@ typedef struct ControllerCopy
 	char AnalogX;
 	char AnalogY;
 	ushort padding;
-} ControllerCopy;
+}
+ControllerCopy;
 
 typedef struct ControllerBuffer
 {
@@ -44,7 +46,8 @@ typedef struct ControllerBuffer
 	ushort padding;
 	char AnalogX;
 	char AnalogY;
-} ControllerBuffer;
+}
+ControllerBuffer;
 
 typedef struct LevelLoader
 {
@@ -68,7 +71,8 @@ typedef struct LevelLoader
 	int u13;		 // Offset: 0x44
 	int u14;		 // Offset: 0x48
 	int u15;		 // Offset: 0x4C
-} LevelLoader;
+}
+LevelLoader;
 
 typedef struct ModelData
 {
@@ -93,7 +97,8 @@ typedef struct ModelData
 	int Unk44;            		  // Offset: 0x44
 	int Unk48;            		  // Offset: 0x48
 	int Unk4C;            		  // Offset: 0x4C
-} ModelData;
+}
+ModelData;
 
 typedef struct ModelEntry
 {
@@ -129,7 +134,8 @@ typedef struct ModelEntry
 	float Unk29;             // Offset: 0x74
 	int *Unk30;            	 // Offset: 0x78
 	int *Unk31;            	 // Offset: 0x7C
-} ModelEntry;
+}
+ModelEntry;
 
 typedef struct Object Object;
 
@@ -138,8 +144,7 @@ typedef struct Object
 	int num;
 	int num2;
 	int u1;
-	short u2;
-	short modelID;
+	int param;
 	float position[3];
 	float angle[3];
 	float scale[3];
@@ -151,9 +156,44 @@ typedef struct Object
 	long animation_pointer2;
 	long animation_pointer3;
 	long animation_pointer4;
-} Object;
+}
+Object;
 
 #define OBJECT_FLAG_VISIBLE 0x0001
+
+typedef enum BodyPartType
+{
+    CUSTOM_PART_BODY = 0,
+    CUSTOM_PART_BELT,
+    CUSTOM_PART_ARM_L,
+    CUSTOM_PART_HAND_L,
+    CUSTOM_PART_ARM_R,
+    CUSTOM_PART_HAND_R,
+    CUSTOM_PART_FACE,
+    CUSTOM_PART_HEAD,
+    CUSTOM_PART_HEAD_BALL,
+    CUSTOM_PART_LEG_L,
+    CUSTOM_PART_FOOT_L,
+    CUSTOM_PART_LEG_R,
+    CUSTOM_PART_FOOT_R,
+}
+BodyPartType;
+
+typedef enum CustomPartSet
+{
+    CUSTOM_PART_SET_NONE = 0,
+    CUSTOM_PART_SET_KNIGHT,
+    CUSTOM_PART_SET_DRAGON,
+    CUSTOM_PART_SET_IRON,
+    CUSTOM_PART_SET_CAT,
+    CUSTOM_PART_SET_GIRL,
+	CUSTOM_PART_SET_COOL,
+	CUSTOM_PART_SET_CHICKEN,
+	CUSTOM_PART_SET_SAMURAI,
+	CUSTOM_PART_SET_CLOWN,
+	CUSTOM_PART_SET_GOLD
+}
+CustomPartSet;
 
 typedef struct CustomParts
 {
@@ -161,7 +201,8 @@ typedef struct CustomParts
 	int customBodyID;
 	int customArmsID;
 	int customLegsID;
-} CustomParts;
+}
+CustomParts;
 
 typedef struct LevelClass LevelClass;
 
@@ -192,7 +233,8 @@ typedef struct LevelClass
 	float unk_float4;
 	long unk_pointer2;
 	long unk_pointer3;
-} LevelClass;
+}
+LevelClass;
 
 typedef struct GlobalPlayerState
 {
@@ -230,7 +272,8 @@ typedef struct GlobalPlayerState
 	float animation_frame_store[4]; //??? Stores the animation frame when coming to a stop ???
 	int u34;
 	float unknown_float2;
-} GlobalPlayerState;
+}
+GlobalPlayerState;
 
 
 // Player Flag
@@ -272,14 +315,15 @@ typedef struct GlobalPlayerState
 
 typedef struct Player
 {
-	float direction_angle[4];
+	float spawnLocation[3];
+	float directionAngle;
 	int flag;
-	int heart_count;
+	int heartCount;
 	short u1;
-	short bomb_type;
-	int bomb_count;
-	int u4;
-	int control_type;              // 0 = None, 1 = Player, 2 = AI, 3 = Dead (No Input)
+	short bombType;
+	int bombCount;
+	int u2;
+	int controlType;              // 0 = None, 1 = Player, 2 = AI, 3 = Dead (No Input)
 	LevelClass *PlayerLevelClass; // Pointer to the LevelClass this Player is controlling
 	int u6;
 	LevelClass *OtherClass;
@@ -287,31 +331,36 @@ typedef struct Player
 	int u9;
 	int u10;
 	int u11;
-	int animation_type;
-	int collision_enabled;
+	int animationType;
+	int collisionEnabled;
 	int u13;
 	int u14;
 	int u15;
-	float direction_angle2[4];
+	float directionAngle2[4];
 	short u12;
-	char timerA_enabled; // virus_type has to be set for this to work
-	char virus_type;
-	float virus_float1;
-	float virus_float2;
+	char timerA_Enabled; // virusType has to be set for this to work
+	char virusType;
+	float virusFloat1;
+	float virusFloat2;
 	int timer2;
-	int virus_timer;
+	int virusTimer;
 	int u16[5];
 	int timerA;
-	int u17[7];
+	short unkType;
+	short unkType1;
+	int unkType2;
+	int u17[5];
 	LevelClass *ComputationLevelClass;
 	int u20[3];
-	float unknown_float1;
+	float unknownFloat1;
 	int u21;
-} Player;
+}
+Player;
 
 typedef struct Game
 {
-	int u1[4];
+	int state;
+	int u1[3];
 	int flag;
 	int life_count;
 	int continue_count;
@@ -324,18 +373,8 @@ typedef struct Game
 	float delta_time;
 	int seconds_elapsed;
 	int u8[6];
-} Game;
-
-#define CUSTOM_ID_KNIGHT    01
-#define CUSTOM_ID_DRAGON    02
-#define CUSTOM_ID_IRON      03
-#define CUSTOM_ID_CAT       04
-#define CUSTOM_ID_GIRL      05
-#define CUSTOM_ID_COOL      06
-#define CUSTOM_ID_CHICKEN   07
-#define CUSTOM_ID_SAMURAI   08
-#define CUSTOM_ID_CLOWN     09
-#define CUSTOM_ID_GOLD      10
+}
+Game;
 
 typedef struct VSGame
 {
@@ -359,8 +398,19 @@ typedef struct VSGame
 	char customVerifyNumbersP2[9];
 	char customVerifyNumbersP3[9];
 	char customVerifyNumbersP4[9];
+	int customPartSetID[4];
 	// more possibly here
-} VSGame;
+}
+VSGame;
+
+typedef struct PlayerPointer
+{
+	int flag;
+	Object *playerObject;
+	long playermodelSetup1;
+	long playermodelSetup2;
+}
+PlayerPointer;
 
 typedef struct Bomb
 {
@@ -396,7 +446,26 @@ typedef struct Bomb
 	int u17;
 	int unk_flag3;
 	float unk_float2[4];
-} Bomb;
+}
+Bomb;
+
+typedef struct PickupState
+{
+	int flag;
+	LevelClass *PickupLevelClass;
+	short pickupTimer;
+	short u1;
+	int u2;
+	int u3;
+	float offsetTargetX;
+	float offsetTargetDist;
+	float offsetTargetZ;
+	float offsetTargetY;
+	float offsetTargetSpeed;
+	int u4;
+	int u5;
+}
+PickupState;
 
 typedef struct ModelAlloc
 {
@@ -404,7 +473,8 @@ typedef struct ModelAlloc
 	long modelData;
 	int u1;
 	int count;
-} ModelAlloc;
+}
+ModelAlloc;
 
 #define CONTAINER_BILLBOARD 0x2000
 
@@ -415,20 +485,41 @@ typedef struct ContainerObjectAlloc
 	short u1;
 	short u2;
 	int flag;
-} ContainerObjectAlloc;
+}
+ContainerObjectAlloc;
 
 typedef struct EnemyAlloc
 {
 	short behaviour;
 	short modelID;
-} EnemyAlloc;
+}
+EnemyAlloc;
 
 typedef struct SFXChannel
 {
 	float location[3]; // Location of the sound
 	int isDirectional; // If true, the sound is directional (Unconfirmed)
 	int soundID; // -1 = no sound allocated
-} SFXChannel;
+}
+SFXChannel;
+
+typedef struct SFXStruct
+{
+    long pointer;
+    short flag1;
+    short flag2;
+    short flag3;
+    short controlFlag; //0x1000 Play, 0x2000 Stop
+    short soundID;
+    short playFlag;
+    int timer;
+    short flag4;
+    short flag5;
+    int unknown1;
+    short flag6;
+    short flag7;
+}
+SFXStruct;
 
 typedef struct CameraValues
 {
@@ -513,5 +604,13 @@ typedef struct ComputerPlayerController
 }
 ComputerPlayerController;
 
+typedef struct BoolStruct
+{
+	int someBool1;
+	int someBool2;
+	int someBool3;
+	int someBool4;
+}
+BoolStruct;
 
 #endif

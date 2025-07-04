@@ -10,6 +10,9 @@
 #include <stdbool.h>
 #include <stdio.h>
 
+#include "Code.h"
+#include "Hooks.h"
+
 #include "GameVars/Struct.h"
 #include "GameVars/CustomStruct.h"
 #include "GameVars/DefVars.h"
