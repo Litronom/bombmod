@@ -1,6 +1,3 @@
-#include <stdbool.h>
-#include <stdio.h>
-
 #include "MainInclude.h"
 
 bool isCustomVarsInitialized = false; // Flag to check if custom variables are initialized
@@ -8,6 +5,11 @@ ControllerEX ControllerInputsEX[4] ALIGN16; // Extended Controller inputs for ea
 
 int TestmodelID = OBJ_MODEL_BOMB_BIG; //Test
 int modelbehavior = 7; //Test
+int TestValue = 3; //Test
+
+int rivalEquipID[4] = {0,1,2,3};
+int rival[] = { OBJ_MODEL_PLAYER_ARTEMIS, OBJ_MODEL_PLAYER_ORION, OBJ_MODEL_PLAYER_REGULUS, OBJ_MODEL_PLAYER_ALTAIR, OBJ_MODEL_PLAYER_ALTAIR_ARMOR}; 
+int BombCol = 0x4A;
 
 // Function to compute extended controller inputs
 void ComputeControllerInputsEX()
@@ -30,10 +32,175 @@ void ComputeControllerInputsEX()
 	}
 }
 
+void EquipRivalParts(int playerID, int rivalID)
+{
+	int count = 16;
+
+//	Object *plyObj = g_PlayerPointers[playerID].playerObject;
+
+//	g_FreePlayerAssets(playerID);
+//	g_InitPlayerAssetPointers(plyObj,count);
+
+	for (int i = 0; i < count; i++)
+	{
+		EquipCustomPart(playerID, i, rival[rivalID]);
+		g_SetBodyPartToModelPart(playerID,i,i);
+	}
+}
+
+void EquipArtemisParts(int playerID)
+{
+	for (int i = 0; i < 16; i++)
+	{
+		EquipCustomPart(playerID, i, OBJ_MODEL_PLAYER_ARTEMIS);
+		g_SetBodyPartToModelPart(playerID,i,i);
+	}
+}
+
+void EquipOrionParts(int playerID)
+{
+	for (int i = 0; i < 16; i++)
+	{
+		EquipCustomPart(playerID, i, OBJ_MODEL_PLAYER_ORION);
+		g_SetBodyPartToModelPart(playerID,i,i);
+	}
+}
+
+void EquipRegulusParts(int playerID)
+{
+	for (int i = 0; i < 16; i++)
+	{
+		EquipCustomPart(playerID, i, OBJ_MODEL_PLAYER_REGULUS);
+		g_SetBodyPartToModelPart(playerID,i,i);
+	}
+}
+
+void EquipAltairParts(int playerID)
+{
+	for (int i = 0; i < 16; i++)
+	{
+		EquipCustomPart(playerID, i, OBJ_MODEL_PLAYER_ALTAIR);
+		g_SetBodyPartToModelPart(playerID,i,i);
+	}
+}
+
+void ChangeBombermanColors(int playerID, int colorModelID)
+{
+	if (g_Players[playerID].PlayerLevelClass->ObjectPointer == NULL)
+	{
+		return;
+	}
+	
+	for (int i = 0; i < 0xC; i++)
+	{
+		g_AssignModelParts(g_Players[playerID].PlayerLevelClass->ObjectPointer, colorModelID, i, i);
+	}
+}
+
+void ItemRainAroundPlayer(int itemID, int radius, int chance)
+{
+	if (!g_PauseFlag && g_Players[0].controlType == 1 && g_Players[0].heartCount > 0 && g_GameState.delta_time != 0.0f)
+	{
+		if (g_getRandomNumber(chance) == 0)
+		{
+			Object* playerObj = g_Players[0].PlayerLevelClass->ObjectPointer;
+			float PosX = playerObj->position[0] + (float)(g_getRandomNumber(radius * 2 + 1) - radius) * 100.0f;
+			float PosY = playerObj->position[1] + 1000.0f;
+			float PosZ = playerObj->position[2] + (float)(g_getRandomNumber(radius * 2 + 1) - radius) * 100.0f;
+			g_spawnItem(itemID, PosX, PosY, PosZ);
+		}
+	}
+}
+
+void BombRainAroundPlayer(int bombType, int radius, int chance)
+{
+	if (!g_PauseFlag && g_Players[0].controlType == 1 && g_Players[0].heartCount > 0 && g_GameState.delta_time != 0.0f)
+	{
+		if (g_getRandomNumber(chance) == 0)
+		{
+			Object* playerObj = g_Players[0].PlayerLevelClass->ObjectPointer;
+			float PosX = playerObj->position[0] + (float)(g_getRandomNumber(radius * 2 + 1) - radius) * 100.0f;
+			float PosY = playerObj->position[1] + 1000.0f;
+			float PosZ = playerObj->position[2] + (float)(g_getRandomNumber(radius * 2 + 1) - radius) * 100.0f;
+			g_spawnBomb(bombType, PosX, PosY, PosZ, 4);
+		}
+	}
+}
+
 void GlobalUpdate()
 {
 	ComputeControllerInputsEX(); // Update the extended controller inputs
 
+
+	//if (ControllerInputsEX[0].ButtonPressed&BTN_L)
+	//{
+	//	BombCol = (g_gameFrameCounter % 4) + 0x4A;
+	//	ChangeBombermanColors(0, BombCol);	
+	//}
+	
+	if (g_CurrentScreenID == 0x23)
+	{
+		//int player = g_VSPlayerSelectionID;
+
+		if (g_GameObjects[0].angle[0] > 0)
+		{
+			//EquipRivalParts(player,rivalEquipID[player]);
+		}	
+
+		if ((g_GameObjects[0].angle[0] > 0 && g_GameObjects[0].angle[0] < 90.0f) || (g_GameObjects[0].angle[0] > 90.0f && g_GameObjects[0].angle[0] < 180.0f) || g_VSPlayerSubSelectionID == 1)
+		{
+			for (int i = 0; i < 4; i++)
+			{
+				switch (i)
+				{
+				case 0:
+					EquipArtemisParts(i);
+					break;
+				case 1:
+					EquipOrionParts(i);
+					break;
+				case 2:
+					EquipRegulusParts(i);
+					break;
+				case 3:
+					EquipAltairParts(i);
+					break;				
+				default:
+					break;
+				}
+			}	
+		}
+	}
+	if (g_CurrentScreenID >= 0x28)
+	{
+		BombRainAroundPlayer(BOMB_TYPE_NORMAL, 2, 50);
+	}
+	if (ControllerInputsEX[0].ButtonPressed & BTN_DLEFT)
+	{
+		TestValue--;
+	}
+	if (ControllerInputsEX[0].ButtonPressed & BTN_DRIGHT)
+	{
+		TestValue++;
+	}
+	if (ControllerInputsEX[0].ButtonPressed & BTN_DUP)
+	{
+		Object* playerObj = g_Players[0].PlayerLevelClass->ObjectPointer;
+//		LevelClass* playerLvl = g_Players[0].PlayerLevelClass;
+//		g_SpawnParticleEffect(effectID, playerObj->position[0], playerObj->position[1] + 160.0f, playerObj->position[2], playerLvl);
+//		g_SpawnParticleEffect(TestValue, 0, 160.0f, 0, playerLvl);
+		g_spawnItem(g_getRandomNumber(9), playerObj->position[0] + 150.0f, playerObj->position[1] + 160.0f, playerObj->position[2] + 150.0f);
+	}
+	if (ControllerInputsEX[0].ButtonPressed & BTN_DDOWN)
+	{
+		Object* playerObj = g_Players[0].PlayerLevelClass->ObjectPointer;
+		Object* obj = g_CreateGameObjectEx((void*)TestValue, -1, 0x01180000, 0xD0, g_Players[0].PlayerLevelClass);
+		if (obj) {
+			obj->position[0] = playerObj->position[0] + 150.0f; // X coordinate
+			obj->position[1] = playerObj->position[1] + 160.0f; // Y coordinate
+			obj->position[2] = playerObj->position[2] + 150.0f; // Z coordinate
+		}
+	}
 	/*
 	for (int i = 0; i < 4; i++)
 	{
@@ -113,20 +280,83 @@ void GlobalUpdate()
 	*/	
 }
 
+void EquipInvisiblePart(int playerID, int partSlot)
+{
+	g_EquipCustomPart(playerID, partSlot, OBJ_MODEL_EMPTY);
+}
+
 void PlayerSpawning(int playerID)
 {
-	if (g_GameState.state == 0)
-	{
-		g_InitPlayerAssetPointers(g_Players[playerID].PlayerLevelClass->ObjectPointer,0xF);
+	int count = 0x10;
+//	if (!(g_LevelLoader.flag&0x4))
+//	{
+//		if (playerID != 0)
+//		{
+//			return;
+//		}
+		
+		g_InitPlayerAssetPointers(g_Players[playerID].PlayerLevelClass->ObjectPointer,count);
 
-		g_EquipCustomPart(playerID, CUSTOM_PART_FACE, OBJ_MODEL_CUSTOM_CAT_HOOD);
-		g_EquipCustomPart(playerID, CUSTOM_PART_BELT, OBJ_MODEL_CUSTOM_CAT_TAIL);
-		g_EquipCustomPart(playerID, CUSTOM_PART_HAND_L, OBJ_MODEL_CUSTOM_CAT_PAWS_ARMS_L);
-		g_EquipCustomPart(playerID, CUSTOM_PART_HAND_R, OBJ_MODEL_CUSTOM_CAT_PAWS_ARMS_R);
-		g_EquipCustomPart(playerID, CUSTOM_PART_FOOT_L, OBJ_MODEL_CUSTOM_CAT_PAWS_LEGS_L);
-		g_EquipCustomPart(playerID, CUSTOM_PART_FOOT_R, OBJ_MODEL_CUSTOM_CAT_PAWS_LEGS_R);
-		g_EquipCustomPart(playerID, CUSTOM_PART_HEAD_BALL, OBJ_MODEL_CUSTOM_CAT_PAWS_LEGS_R);
+		/*
+		g_EquipCustomPart(playerID, CUSTOM_PART_BODY, OBJ_MODEL_SPELLMAKER_ITEM_BOMB_UP_EVIL);
+		EquipInvisiblePart(playerID, CUSTOM_PART_FACE);
+		EquipInvisiblePart(playerID, CUSTOM_PART_HEAD);
+		EquipInvisiblePart(playerID, CUSTOM_PART_BELT);
+		EquipInvisiblePart(playerID, CUSTOM_PART_HAND_L);
+		EquipInvisiblePart(playerID, CUSTOM_PART_ARM_L);
+		EquipInvisiblePart(playerID, CUSTOM_PART_HAND_R);
+		EquipInvisiblePart(playerID, CUSTOM_PART_ARM_R);
+		EquipInvisiblePart(playerID, CUSTOM_PART_FOOT_L);
+		EquipInvisiblePart(playerID, CUSTOM_PART_LEG_L);
+		EquipInvisiblePart(playerID, CUSTOM_PART_FOOT_R);
+		EquipInvisiblePart(playerID, CUSTOM_PART_LEG_R);
+		EquipInvisiblePart(playerID, CUSTOM_PART_HEAD_BALL);
+		*/
+
+		//LoadCustomParts(playerID,0,g_SaveGameCustomParts.customHeadID);
+		//LoadCustomParts(playerID,1,g_SaveGameCustomParts.customBodyID);
+		//LoadCustomParts(playerID,2,g_SaveGameCustomParts.customArmsID);
+		//LoadCustomParts(playerID,3,g_SaveGameCustomParts.customLegsID);
+		//EquipCustomPart(playerID, CUSTOM_PART_BODY, OBJ_MODEL_PLAYER_REGULUS);
+		count = 0xF;
+		//testModel[5] = (u32)((u8*)TestPlane_Kirby_Bush_001_mesh - (u8*)testModel);
+		//testModel[8] = (u32)((u8*)values - (u8*)testModel);
+
+		//EquipCustomModel(playerID, CUSTOM_PART_BODY, 0);
+		//EquipCustomModel(playerID, CUSTOM_PART_FACE, 1);
+
+		//EquipInvisiblePart(playerID, CUSTOM_PART_HEAD_BALL);
+		//EquipInvisiblePart(playerID, CUSTOM_PART_BELT);
+
+		//for (int i = 0; i < count; i++)
+		//{
+			//EquipCustomPart(playerID, i, OBJ_MODEL_PLAYER_ALTAIR_FINAL);
+		//	g_SetBodyPartToModelPart(playerID,i,0);
+		//}
+		//g_SetBodyPartToModelPart(playerID,CUSTOM_PART_FACE,1);
+
+
+		//EquipCustomModel(playerID, CUSTOM_PART_HEAD, OBJ_MODEL_OVERWORLD_DRAGON, &testModel[0]);
+
+		//void** playerParts = (void**)g_PlayerPointers[playerID].attachmentModelPtr;
+		//playerParts[CUSTOM_PART_HEAD] = &testModel[0];
+/*	}
+	else
+	{
+		if (playerID > 3)
+		{
+			return;
+		}
+		
+		g_InitPlayerAssetPointers(g_Players[playerID].PlayerLevelClass->ObjectPointer,count);
+
+		for (int i = 0; i < count; i++)
+		{
+			EquipCustomPart(playerID, i, rival[rivalEquipID[playerID]]);
+			g_SetBodyPartToModelPart(playerID,i,i);
+		}
 	}
+*/
 }
 
 void InitCustomVars()
@@ -156,11 +386,14 @@ void PlayerMovement_Hook(int num)
 }
 
 
-void EnemyAllocate(int ID, int Behaviour, int Model)
+void EnemyAllocate(int ID, int behaviour, int modelID)
 {
-	g_EnemySlots[ID].behaviour = Behaviour;
-	g_EnemySlots[ID].modelID = ID;
-	
+	g_EnemySlots[ID].behaviour = behaviour;
+	g_EnemySlots[ID].modelID = modelID;
+
+//	g_EnemySlots[ID].behaviour = BEHAVIOR_ENM_BAT;	
+// 	g_EnemySlots[ID].modelID = OBJ_MODEL_ENM_BAT;
+
 	//g_EnemySlots[ID].behaviour = modelbehavior;
 	//g_EnemySlots[ID].modelID = TestmodelID;
 }

@@ -18,8 +18,7 @@
 
 .include "CustomCode/GameVars/GameVars.asm"
 
-.org 0x4B4E8
-JAL AllocateModel_Hook
+
 
 .org 0x8EF30
 JAL SpawnPlayerBomb_Hook
@@ -30,14 +29,54 @@ JAL SpawnPlayerBomb_Hook
 .org 0x60554
 JAL SpawnPlayer_Hook
 
-/*
+.org 0x78500
+JAL SpawnPlayer_Hook
+
+.org 0x593A0
+JAL SpawnPlayer_Hook
+
+.org 0x4B4E8
+JAL AllocateModel_Hook
+
+.org 0x87D24
+JAL AllocateModel_Hook
+
+.org 0x4400C
+JAL AllocateModel_Hook
+
+.org 0x42808
+J EquipCustomPart_Hook
+NOP
+
+.org 0x436B8
+JAL RenderMapObjects_Hook
+
+.org 0x481E0
+JAL RenderDynamicObjects_Hook
+
+.org 0x47CAC
+JAL RenderMap_Hook
+
+
+
+
 .org 0xA1808
 J EnemyAllocate
 NOP
 NOP
 NOP
 NOP
-*/
+
+.org 0x9F818
+JAL EnemyDamagedCheck_Hook
+or $s2, $s7, $zero
+
+//.org 0x9F510
+//JAL OnEnemyHealthChanged_Hook
+//or $a0, $s2, $zero   ; Pass enemyObject pointer (delay slot)
+
+//.org 0xA0248
+//JAL OnEnemySpawned_Hook
 
 .org 0x99368
 JAL ContainerObjAllocate
@@ -98,6 +137,7 @@ ADDIU SP, SP, 0x18 //deallocate stack space
 StartRAMData:
 
 .include "CustomCode/BUILD_FILES.asm"
+//.include "Assets/BUILD_DISPLAYLISTS.asm"
 
 EndRAMData:
 

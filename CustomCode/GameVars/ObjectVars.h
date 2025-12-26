@@ -38,10 +38,10 @@
 #define OBJ_MODEL_UNKNOWN2                      0x020
 #define OBJ_MODEL_UNKNOWN3                      0x021
 #define OBJ_MODEL_SHADOW_ROUND_BLACK            0x022
-#define OBJ_MODEL_UNKNOWN5                      0x023
-#define OBJ_MODEL_UNKNOWN6                      0x024
-#define OBJ_MODEL_UNKNOWN7                      0x025
-#define OBJ_MODEL_UNKNOWN8                      0x026
+#define OBJ_MODEL_UNUSED_BOMBERMAN_LOGO         0x023
+#define OBJ_MODEL_HUDSON_LOGO                   0x024
+#define OBJ_MODEL_PRESS_START_TEXT              0x025
+#define OBJ_MODEL_COPYRIGHT_TEXT                0x026
 
 #define OBJ_MODEL_OVERWORLD_WORLDS              0x027
 #define OBJ_MODEL_UNKNOWN9                      0x028
@@ -71,9 +71,13 @@
 #define OBJ_MODEL_BATTLE_EMBLEM                 0x040
 
 #define OBJ_MODEL_PLAYER_BOMBERMAN              0x049
+#define OBJ_MODEL_PLAYER_BOMBERMAN_WHITE        0x04A
+#define OBJ_MODEL_PLAYER_BOMBERMAN_BLACK        0x04B
+#define OBJ_MODEL_PLAYER_BOMBERMAN_RED          0x04C
+#define OBJ_MODEL_PLAYER_BOMBERMAN_BLUE         0x04D
 
 #define OBJ_MODEL_QUESTION_MARK                 0x04E
-#define OBJ_MODEL_UNKNOWN21                     0x04F
+#define OBJ_MODEL_EMPTY                         0x04F
 
 #define OBJ_MODEL_CUSTOM_GOLD_VISOR             0x050
 #define OBJ_MODEL_CUSTOM_SUNGLASSES             0x051
@@ -282,6 +286,8 @@
 
 #define OBJ_MODEL_EFFECT_GOAL_ARROW             0x11C
 
+#define OBJ_MODEL_EFFECT_SMOKE_PUFF             0x11E
+
 #define OBJ_MODEL_EFFECT_PLASMA_SPINNER         0x12A
 #define OBJ_MODEL_EFFECT_ELECTRIC_CLOUD         0x12B
 #define OBJ_MODEL_EFFECT_PUFFY_CLOUD            0x12C
@@ -305,6 +311,9 @@
 #define OBJ_MODEL_MAP_BLUE_RESORT4              0x13D
 #define OBJ_MODEL_MAP_BLUE_RESORT5              0x13E
 #define OBJ_MODEL_MAP_BLUE_RESORT6              0x13F
+
+#define OBJ_MODEL_WATERFALL                     0x14B
+#define OBJ_MODEL_CANNON                        0x161
 
 #define OBJ_MODEL_MAP_UP_AND_DOWN1              0x202
 #define OBJ_MODEL_MAP_UP_AND_DOWN2              0x203
@@ -347,6 +356,9 @@
 //#define OBJ_MODEL_UNKNOWN                     0x276
 //#define OBJ_MODEL_UNKNOWN                     0x277
 //#define OBJ_MODEL_UNKNOWN                     0x278
+
+#define OBJ_MODEL_DRAGON_HEAD_GATE              0x2A9
+#define OBJ_MODEL_BLUE_DRAGON_SPIRE             0x2AD
 
 #define OBJ_MODEL_BATTLE_TROUBLEMAKER           0x2B2
 
@@ -402,9 +414,9 @@
 #define OBJ_MODEL_PLAYER_REGULUS                0x322
 #define OBJ_MODEL_PLAYER_SIRIUS                 0x323
 #define OBJ_MODEL_PLAYER_ALTAIR                 0x324
-
+#define OBJ_MODEL_PLAYER_ALTAIR_FINAL           0x325
 #define OBJ_MODEL_PLAYER_ALTAIR_ARMOR           0x326
-#define OBJ_MODEL_PLAYER_ALTAIR_GEAR            0x327
+#define OBJ_MODEL_PLAYER_ALTAIR_DRONE           0x327
 #define OBJ_MODEL_PLAYER_SIRIUS_ARMOR           0x328
 #define OBJ_MODEL_ATTACK_SIRIUS_DRAGON_JET      0x329
 #define OBJ_MODEL_PROJECTILE_ARTEMIS_FLARE      0x32A
