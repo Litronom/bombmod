@@ -15,7 +15,7 @@ int SpawnPlayerBomb_Hook(short bombType, int locX, int locY, int locZ, short pla
     }
 
     // Check if the player is already using a pickup
-    if (g_PickupState[playerID].PickupLevelClass != 0)
+    if (g_HeldObjects[playerID].heldLvlClass != 0)
 	{
         func_80273E2C(playerID);
         return 0;
@@ -119,7 +119,7 @@ void SpawnPlayer(int playerID)
     D_802ACA78[temp_s0_2] = 0.0f;
     ply->flag = 0;
     ply->u12 = ply->u12 & 0x200;
-    ply->u6 = 0;
+    ply->HeldLevelClass = 0;
     ply->collisionEnabled = 1;
     ply->u13 = 0;
     ply->u14 = 0;

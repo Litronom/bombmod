@@ -173,7 +173,7 @@ void GlobalUpdate()
 	}
 	if (g_CurrentScreenID >= 0x28)
 	{
-		BombRainAroundPlayer(BOMB_TYPE_NORMAL, 2, 50);
+//		BombRainAroundPlayer(BOMB_TYPE_NORMAL, 2, 50);
 	}
 	if (ControllerInputsEX[0].ButtonPressed & BTN_DLEFT)
 	{
@@ -193,13 +193,7 @@ void GlobalUpdate()
 	}
 	if (ControllerInputsEX[0].ButtonPressed & BTN_DDOWN)
 	{
-		Object* playerObj = g_Players[0].PlayerLevelClass->ObjectPointer;
-		Object* obj = g_CreateGameObjectEx((void*)TestValue, -1, 0x01180000, 0xD0, g_Players[0].PlayerLevelClass);
-		if (obj) {
-			obj->position[0] = playerObj->position[0] + 150.0f; // X coordinate
-			obj->position[1] = playerObj->position[1] + 160.0f; // Y coordinate
-			obj->position[2] = playerObj->position[2] + 150.0f; // Z coordinate
-		}
+		g_spawnContainerObject(0xB+TestValue, 1, 0xD, 0x60);
 	}
 	/*
 	for (int i = 0; i < 4; i++)
@@ -407,7 +401,7 @@ void ContainerObjAllocate(ContainerObjectAlloc* LevelContainers)
 		g_ContainerObjectSlots[i].modelID = obj->modelID;
 		g_ContainerObjectSlots[i].collisionType = obj->collisionType;
 		g_ContainerObjectSlots[i].u1 = obj->u1;
-		g_ContainerObjectSlots[i].u2 = obj->u2;
+		g_ContainerObjectSlots[i].particleEffectID = obj->particleEffectID;
 		g_ContainerObjectSlots[i].flag = obj->flag;
 	}
 /*

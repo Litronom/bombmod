@@ -22,6 +22,8 @@ extern ComputerPlayerController g_ComputerPlayerController[4]; //0x800BCFE8
 extern SFXChannel g_SoundChannels[8]; //0x800BD778
 extern SFXStruct g_SoundFlags[8]; //0x801C8B50
 extern RivalValues g_RivalInitialValues[10]; //0x802A1044
+extern HeldObject g_HeldObjects[5]; //0x802AFCE8
+extern ContainerObject g_ContainerData[32]; //0x80090440
 
 // Enemy Attack System - Unified Jump Table
 // Note: This is ONE table indexed at different offsets by the state machine
@@ -37,7 +39,6 @@ extern int g_PlayerLoadedFlag[16]; //0x802AC8A8
 extern GlobalPlayerState g_GlobalPlayerState; //0x802AC9E0
 extern int g_playerFlagBitField; //0x802AC9E8
 extern ComputerPlayerMovement g_ComputerPlayerMovement[4]; //0x802ACF08
-extern PickupState g_PickupState[]; //0x802AFCF0
 extern ContainerObjectAlloc g_ContainerObjectSlots[4]; //0x802B0190
 extern void g_AllocateContainers(ContainerObjectAlloc* LevelContainers); //0x8027EB5C
 
@@ -112,6 +113,7 @@ extern void func_80297D30(int param1, void* param2); //0x80297D30 - Unknown func
 // ENEMY SYSTEM
 // ============================================================================
 
+extern void g_EnemyAllocate(int enemySlotID, int behavior, int modelID); //0x80287008 - Puts entry in g_EnemySlots
 extern void func_80282430(void* enemyObj, int animID, int param); //0x80282430 - Set enemy animation
 extern void func_8028304C(); //0x8028304C - ID enemy stun (non-standard: uses s0/s1 registers directly)
 extern int func_802824B4(void* enemyObj); //0x802824B4 - Update enemy state
@@ -137,11 +139,14 @@ extern short g_getRandomNumber(ushort max); //0x80234248 - Returns random number
 extern double g_thresholdPercentage(); //0x8025E63C
 extern void g_spawnItem(int itemID, float locX, float locY, float locZ); //0x8027B7C4
 extern int g_spawnItemType_Grid(int posX, int posY, int posZ, int patternIndex); //0x8027B8D4
+extern void g_playerThrowHeldObject(short playerID, short throwSpeedID); //0x80270770 - Triggers when player should release/throw their held object through any means
 extern short g_ItemSpawnProbabilityTable[10][3]; // 0x802AFE88
 extern int g_LastItemIDCollected; // 0x802AFECC - Last item ID collected by player, index based on 1
 extern int g_PauseFlag; //0x802A0B80
 extern int g_soundIndexCounter; //0x802A13C0
 extern int g_gameFrameCounter; //0x802A13C4
+extern bool g_spawnContainerObject(short posX, short posY, short posZ, short renderFlag); //0x8026F068 - Spawns a container object based on renderFlag at specified position
+extern void g_destroyContainerObject(ContainerObject *cntObj); //0x8027D328
 
 // ============================================================================
 
@@ -236,6 +241,13 @@ extern int D_802AC8A0; //0x802AC8A0
 
 extern int D_802AC8E8[16]; //0x802AC8E8
 extern float D_802ACA78[16]; //0x802ACA78
+
+// LevelClass / Object flag helpers (descriptive aliases kept alongside original symbols)
+extern void g_XorLevelClassFlags(LevelClass *levelPtr, int flags); // 0x802313B0 - XOR flags on LevelClass (original)
+extern void g_SetLevelClassFlags(LevelClass *levelPtr, int flags); // 0x80231408 - OR flags on LevelClass (existing)
+extern void g_ClearLevelClassFlags(LevelClass *levelPtr, int flags); // 0x802313DC - AND~ flags on LevelClass (existing)
+extern void g_UpdateLevelObjectFlags(LevelClass *levelPtr); // 0x802312AC - Apply LevelClass flags to attached object
+extern void g_SetObjectDisplayMode(void *obj, int mode); // 0x8022946C - Set object display/mode byte
 
 extern void func_80229F74(Object* obj, int num); //0x80229F74
 extern void func_8022984C(Object* obj, int flag); //0x8022984C

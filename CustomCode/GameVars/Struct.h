@@ -148,24 +148,21 @@ typedef struct Object Object;
 
 typedef struct Object
 {
-	int num;
-	int num2;
-	int u1;
-	int param;
-	float position[3]; // 0x10-0x18
-	float angle[3]; // 0x1C-0x24
-	float scale[3]; // 0x28-0x30
-	short visible; // 0x34
-	short u7; // 0x36
-	float field38; // 0x38 - Float value (set to 0.0 by effect spawners when param1 used)
-	long u8; // 0x3C
-	long modelData_pointer; // 0x40 - Pointer to ModelData struct
-	long animation_pointer1; // 0x44
-	long animation_pointer2; // 0x48
-	long animation_pointer3; // 0x4C
-	long animation_pointer4; // 0x50
-	// Effect spawn functions also access 0x4C-0x60 as backup/save positions
-	// when reading those offsets as floats instead of pointers
+	int num;                      // 0x00
+	int num2;                     // 0x04
+	int u1;                       // 0x08
+	int param;                    // 0x0C
+	float position[3];            // 0x10-0x18
+	float angle[3];               // 0x1C-0x24
+	float scale[3];               // 0x28-0x30
+	short visible;                // 0x34
+	short u7;                     // 0x36
+	int modelDisplayListID;       // 0x38 - Which DL of the model to display
+	long modelData_pointer;       // 0x3C - Pointer to ModelData struct
+	long animation_pointer1;      // 0x40
+	long animation_pointer2;      // 0x44
+	long animation_pointer3;      // 0x48
+	long animation_pointer4;      // 0x4C
 }
 Object;
 
@@ -356,7 +353,7 @@ typedef struct Player
 	int bombExplosionLevel;
 	int controlType;              // 0 = None, 1 = Player, 2 = AI, 3 = Dead (No Input)
 	LevelClass *PlayerLevelClass; // Pointer to the LevelClass this Player is controlling
-	int u6;
+	LevelClass *HeldLevelClass;   // Pointer to the LevelClass of the held object
 	LevelClass *OtherClass;
 	int u8;
 	int u9;
@@ -445,40 +442,64 @@ PlayerPointer;
 
 typedef struct Bomb
 {
-	short num;
-	short flag;
-	int u1;
-	int u2;
-	int u3;
-	int u4;
-	long next_bomb_ptr;
-	long unk_ptr1;
-	long unk_ptr2;
-	long unk_ptr3;
-	int u5;
-	int u6;
-	int u7;
-	long unk_ptr4;
-	long unk_ptr5;
-	int u8;
-	int u9;
-	float position[3];
-	int u10;
-	int u11;
-	int u12;
-	int u13;
-	int u14;
-	short inflate_timer;
-	short u15;
-	int unk_flag1;
-	short explode_timer;
-	short unk_flag2;
-	int u16;
-	int u17;
-	int unk_flag3;
-	float unk_float2[4];
+	short num;                     //0x00
+	short flag;                    //0x02
+	int u1;                        //0x04
+	int u2;                        //0x08
+	int u3;                        //0x0C
+	int u4;                        //0x10
+	long next_bomb_ptr;            //0x14
+	long unk_ptr1;                 //0x18
+	LevelClass *BombLvlClass;      //0x1C
+	Object *BombObj;               //0x20
+	int u5;                        //0x24
+	int u6;                        //0x28
+	int u7;                        //0x2C
+	long unk_ptr4;                 //0x30
+	long unk_ptr5;                 //0x34
+	int u8;                        //0x38
+	int u9;                        //0x3C
+	float position[3];             //0x40-0x48
+	int u10;                       //0x4C
+	int u11;                       //0x50
+	int u12;                       //0x54
+	int u13;                       //0x58
+	int u14;                       //0x5C
+	short inflate_timer;           //0x60
+	short u15;                     //0x62
+	int state_flag;                //0x64
+	short explode_timer;           //0x68
+	short unk_flag2;               //0x6A
+	int u16;                       //0x6C
+	int u17;                       //0x70
+	int unk_flag3;                 //0x74
+	float unk_float2[4];           //0x78-0x84
 }
 Bomb;
+
+// HeldObject flag bits (used to select throw handlers)
+#define HELD_FLAG_PLAYER 0x1   // Hold another player/rival
+#define HELD_FLAG_BOMB   0x2   // Hold a bomb
+#define HELD_FLAG_ENTITY 0x4   // Hold a regular enemy
+#define HELD_FLAG_ITEM   0x8   // Hold an item
+
+typedef struct HeldObject
+{
+	int num;                      // 0x00
+	int u0;                       // 0x04
+	int flag;                     // 0x08
+	LevelClass *heldLvlClass;     // 0x0C
+	short pickUpTimer;            // 0x10
+	int u1;                       // 0x14
+	int u2;                       // 0x18
+	float offsetTargetX;          // 0x1C
+	float offsetTargetDist;       // 0x20
+	float offsetTargetZ;          // 0x24
+	float offsetTargetY;          // 0x28
+	float offsetTargetSpeed;      // 0x2C
+}
+HeldObject;
+
 
 typedef struct PickupState
 {
@@ -508,17 +529,35 @@ typedef struct ModelAlloc
 ModelAlloc;
 
 #define CONTAINER_BILLBOARD 0x2000
+#define CONTAINER_DRAW      0x0004
 
 typedef struct ContainerObjectAlloc
 {
 	short modelID;
 	short collisionType;
 	short u1;
-	short u2;
+	short particleEffectID;
 	int flag;
 }
 ContainerObjectAlloc;
 
+typedef struct ContainerObject ContainerObject;
+
+typedef struct ContainerObject
+{
+	short num;                           // 0x00
+	short flag;                          // 0x02 - Gets set to 1 when destroyed
+	ContainerObject *nextContainer;      // 0x04 - Pointer to next container for collision loop
+	ContainerObject *containerDataStart; // 0x08 - Pointer to start of container data array
+	Object *containerObject;             // 0x0C
+	Object *containerObject2;            // 0x10 - Can have two objects
+	short u2;                            // 0x14
+	short u3;                            // 0x16
+	short u4;                            // 0x18
+	short containerType;                 // 0x1A - 0x20 for the first, 0x40 for the second or 0x60 for third allocated container type
+	float renderPosition[3];             // 0x1C-0x24 - Position used for rendering, not collision
+}
+ContainerObject;
 
 // Enemy Attack Check Behaviors (0x51 - attackBehavior field)
 // Determines when/if attack should trigger

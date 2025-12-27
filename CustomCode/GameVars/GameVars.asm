@@ -20,6 +20,8 @@
 .definelabel g_SoundChannels, 0x800BD778
 .definelabel g_SoundFlags, 0x801C8B50
 .definelabel g_RivalInitialValues, 0x802A1044
+.definelabel g_HeldObjects, 0x802AFCE8
+.definelabel g_ContainerData, 0x80090440
 
 // Enemy Attack System - Unified Jump Table (33 entries at 0x802A1B74)
 .definelabel g_EnemyAttackTable, 0x802A1B74
@@ -34,7 +36,6 @@
 .definelabel g_GlobalPlayerState, 0x802AC9E0
 .definelabel g_playerFlagBitField, 0x802AC9E8
 .definelabel g_ComputerPlayerMovement, 0x802ACF08
-.definelabel g_PickupState, 0x802AFCF0
 .definelabel g_ContainerObjectSlots, 0x802B0190
 .definelabel g_AllocateContainers, 0x8027EB5C
 
@@ -108,6 +109,7 @@
 // ENEMY SYSTEM
 // ============================================================================
 
+.definelabel g_EnemyAllocate, 0x80287008
 .definelabel func_80282430, 0x80282430
 .definelabel func_8028304C, 0x8028304C
 .definelabel func_802824B4, 0x802824B4
@@ -133,8 +135,11 @@
 .definelabel g_thresholdPercentage, 0x8025E63C
 .definelabel g_spawnItem, 0x8027B7C4
 .definelabel g_spawnItemType_Grid, 0x8027B8D4
+.definelabel g_playerThrowHeldObject, 0x80270770
 .definelabel g_ItemSpawnProbabilityTable, 0x802AFE88
 .definelabel g_LastItemIDCollected, 0x802AFECC
+.definelabel g_spawnContainerObject, 0x8026F068
+.definelabel g_destroyContainerObject, 0x8027D328
 
 // ============================================================================
 
@@ -218,6 +223,12 @@
 
 .definelabel D_802AC8E8, 0x802AC8E8
 .definelabel D_802ACA78, 0x802ACA78
+
+.definelabel g_XorLevelClassFlags, 0x802313B0
+.definelabel g_SetLevelClassFlags, 0x80231408
+.definelabel g_ClearLevelClassFlags, 0x802313DC
+.definelabel g_UpdateLevelObjectFlags, 0x802312AC
+.definelabel g_SetObjectDisplayMode, 0x8022946C
 
 .definelabel func_80229F74, 0x80229F74
 .definelabel func_8022984C, 0x8022984C
