@@ -19,6 +19,12 @@
 .include "CustomCode/GameVars/GameVars.asm"
 
 
+// ----------------------------------------- //
+// Custom hooks into existing function calls //
+// ----------------------------------------- //
+
+.org 0x983F0
+JAL DestroyContainerObject_Hook
 
 .org 0x8EF30
 JAL SpawnPlayerBomb_Hook
@@ -56,9 +62,6 @@ JAL RenderDynamicObjects_Hook
 
 .org 0x47CAC
 JAL RenderMap_Hook
-
-
-
 
 .org 0xA1808
 J EnemyAllocate
@@ -100,11 +103,24 @@ NOP
 NOP
 
 
+
+// --------------- //
+// Important hooks //
+// --------------- //
+
 .org 0x401F4
 JAL UpdateRenderFrame_Hook
 
 .org 0x6A858
 JAL PlayerMovement_Hook
+
+
+
+
+
+// ---------------------------------------------------- //
+// The below is needed to load our custom code into RAM //
+// ---------------------------------------------------- //
 
 .org 0x2374
 JAL CUSTOM_DMA-ROM_RAM_OFFSET

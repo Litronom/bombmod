@@ -113,6 +113,7 @@ extern void func_80297D30(int param1, void* param2); //0x80297D30 - Unknown func
 // ENEMY SYSTEM
 // ============================================================================
 
+extern Enemy *g_spawnEnemyFromAllocation(int enemyAllocID, float locX, float locY, float locZ); //0x802867E4 - Spawns enemy from EnemyAlloc at specified location
 extern void g_EnemyAllocate(int enemySlotID, int behavior, int modelID); //0x80287008 - Puts entry in g_EnemySlots
 extern void func_80282430(void* enemyObj, int animID, int param); //0x80282430 - Set enemy animation
 extern void func_8028304C(); //0x8028304C - ID enemy stun (non-standard: uses s0/s1 registers directly)
@@ -138,8 +139,10 @@ extern void g_RenderModel(Gfx **dlPtr, s32 baseAddress, s32 attachmentIndex); //
 extern short g_getRandomNumber(ushort max); //0x80234248 - Returns random number in range 0 to (max-1)
 extern double g_thresholdPercentage(); //0x8025E63C
 extern void g_spawnItem(int itemID, float locX, float locY, float locZ); //0x8027B7C4
-extern int g_spawnItemType_Grid(int posX, int posY, int posZ, int patternIndex); //0x8027B8D4
+extern bool g_spawnItemType_Grid(short itemID, short posX, short posY, short posZ); //0x8027B828
+extern bool g_spawnItemByChance_Grid(short posX, short posY, short posZ, int patternIndex); //0x8027B8D4
 extern void g_playerThrowHeldObject(short playerID, short throwSpeedID); //0x80270770 - Triggers when player should release/throw their held object through any means
+extern ContainerItemDefinition *g_containerItemDefinitionPtr; //0x802AFE80 - Dynamic pointer to container item definitions
 extern short g_ItemSpawnProbabilityTable[10][3]; // 0x802AFE88
 extern int g_LastItemIDCollected; // 0x802AFECC - Last item ID collected by player, index based on 1
 extern int g_PauseFlag; //0x802A0B80
@@ -258,6 +261,7 @@ extern void g_AssignModelParts(Object* obj, int modelID, int num1, int num2); //
 
 extern void func_802444B8(int playerID, int num); //0x802444B8
 
+extern int g_AllocateModelSize(int size); //0x80225B00
 extern void* g_AllocateModel(int modelID); //0x8026CE28
 extern int g_GetAllocationIndex(int modelID1, int modelID2); //0x8026CD24
 extern void g_InitModel(int param); //0x802267E0

@@ -528,6 +528,15 @@ typedef struct ModelAlloc
 }
 ModelAlloc;
 
+typedef struct ContainerItemDefinition
+{
+	char itemID;
+	char posX;
+	char posY;
+	char posZ;
+}
+ContainerItemDefinition;
+
 #define CONTAINER_BILLBOARD 0x2000
 #define CONTAINER_DRAW      0x0004
 
@@ -549,13 +558,13 @@ typedef struct ContainerObject
 	short flag;                          // 0x02 - Gets set to 1 when destroyed
 	ContainerObject *nextContainer;      // 0x04 - Pointer to next container for collision loop
 	ContainerObject *containerDataStart; // 0x08 - Pointer to start of container data array
-	Object *containerObject;             // 0x0C
-	Object *containerObject2;            // 0x10 - Can have two objects
+	Object *object;                      // 0x0C
+	Object *object2;                     // 0x10 - Can have two objects
 	short u2;                            // 0x14
 	short u3;                            // 0x16
 	short u4;                            // 0x18
-	short containerType;                 // 0x1A - 0x20 for the first, 0x40 for the second or 0x60 for third allocated container type
-	float renderPosition[3];             // 0x1C-0x24 - Position used for rendering, not collision
+	short containerType;                 // 0x2A - 0x20 for the first, 0x40 for the second or 0x60 for third allocated container type
+	float renderPosition[3];             // 0x2C-0x34 - Position used for rendering and item spawning checks, not collision
 }
 ContainerObject;
 
@@ -742,16 +751,17 @@ typedef struct CameraValues
 CameraValues;
 
 // CPU Attack Types
-#define ATTACK_TYPE_BOMBERMAN   -1
-#define ATTACK_TYPE_SIRIUS_1    0
-#define ATTACK_TYPE_ARTEMIS     1
-#define ATTACK_TYPE_ORION       2
-#define ATTACK_TYPE_REGULUS     3
-#define ATTACK_TYPE_UNKNOWN     4
-#define ATTACK_TYPE_STOP        5
-#define ATTACK_TYPE_ALTAIR      6
-#define ATTACK_TYPE_SIRIUS_2    7
-#define ATTACK_TYPE_SIRIUS_3    8
+#define ATTACK_TYPE_BOMBERMAN    -1
+#define ATTACK_TYPE_SIRIUS_1     0
+#define ATTACK_TYPE_ARTEMIS      1
+#define ATTACK_TYPE_ORION        2
+#define ATTACK_TYPE_REGULUS      3
+#define ATTACK_TYPE_ALTAIR       4
+#define ATTACK_TYPE_ALTAIR_DRONE 5
+#define ATTACK_TYPE_ALTAIR_ARMOR 6
+#define ATTACK_TYPE_SIRIUS_2     7
+#define ATTACK_TYPE_SIRIUS_3     8
+#define ATTACK_TYPE_REGULUS_2    9
 
 typedef struct ComputerPlayerMovement
 {

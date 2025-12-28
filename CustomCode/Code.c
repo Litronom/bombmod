@@ -11,6 +11,97 @@ int rivalEquipID[4] = {0,1,2,3};
 int rival[] = { OBJ_MODEL_PLAYER_ARTEMIS, OBJ_MODEL_PLAYER_ORION, OBJ_MODEL_PLAYER_REGULUS, OBJ_MODEL_PLAYER_ALTAIR, OBJ_MODEL_PLAYER_ALTAIR_ARMOR}; 
 int BombCol = 0x4A;
 
+
+// Thank you Github Copilot for the pending spawn queue setup! This makes it quick and easy to test stuff:
+
+// Pending spawn queue used when immediate spawn is blocked by container collision
+#define MAX_PENDING_SPAWNS 16
+// How many frames to retry spawning before giving up
+#define PENDING_SPAWN_TIMEOUT 120
+typedef struct PendingSpawn
+{
+	int modelID;
+	int behaviorID;
+	float x;
+	float y;
+	float z;
+	int timer; // 0 = free, >0 = countdown frames remaining to retry
+} PendingSpawn;
+
+static PendingSpawn g_PendingSpawns[MAX_PENDING_SPAWNS];
+
+// Enqueue a pending spawn. Returns 1 on success, 0 if queue full.
+int QueueSpawnEnemy(int modelID, int behaviorID, float x, float y, float z)
+{
+	for (int i = 0; i < MAX_PENDING_SPAWNS; i++)
+	{
+		if (g_PendingSpawns[i].timer == 0)
+		{
+			g_PendingSpawns[i].modelID = modelID;
+			g_PendingSpawns[i].behaviorID = behaviorID;
+			g_PendingSpawns[i].x = x;
+			g_PendingSpawns[i].y = y;
+			g_PendingSpawns[i].z = z;
+			g_PendingSpawns[i].timer = PENDING_SPAWN_TIMEOUT;
+			return 1;
+		}
+	}
+	return 0;
+}
+
+// Try to spawn an enemy into a temporary slot and return 1 on success, 0 on failure.
+int TrySpawnEnemyNow(int modelID, int behaviorID, float x, float y, float z)
+{
+	EnemyAlloc saved = g_EnemySlots[5];
+
+	g_EnemySlots[5].behaviour = (short)behaviorID;
+	g_EnemySlots[5].modelID = (short)modelID;
+
+	Enemy *enm = g_spawnEnemyFromAllocation(5, x, y, z);
+	if (enm != NULL)
+	{
+		// minimal post-spawn tuning
+		enm->currentHealth += 1;
+		enm->speed *= 1.5f;
+
+		g_EnemySlots[5] = saved;
+		return 1;
+	}
+
+	// restore and indicate failure
+	g_EnemySlots[5] = saved;
+	return 0;
+}
+
+// Process queued pending spawns; attempts to spawn each pending slot and clears on success.
+void ProcessPendingSpawns(void)
+{
+	for (int i = 0; i < MAX_PENDING_SPAWNS; i++)
+	{
+		if (g_PendingSpawns[i].timer == 0)
+			continue; // free slot
+
+		// Attempt spawn; if it fails, decrement timer and drop when it reaches 0
+		int ok = TrySpawnEnemyNow(g_PendingSpawns[i].modelID, g_PendingSpawns[i].behaviorID,
+								  g_PendingSpawns[i].x, g_PendingSpawns[i].y, g_PendingSpawns[i].z);
+		if (ok)
+		{
+			g_PendingSpawns[i].timer = 0;
+		}
+		else
+		{
+			g_PendingSpawns[i].timer--;
+			if (g_PendingSpawns[i].timer <= 0)
+			{
+				// give up
+				g_PendingSpawns[i].timer = 0;
+			}
+		}
+	}
+}
+
+
+
 // Function to compute extended controller inputs
 void ComputeControllerInputsEX()
 {
@@ -127,9 +218,45 @@ void BombRainAroundPlayer(int bombType, int radius, int chance)
 	}
 }
 
+void SpawnEnemy(int enemyModelID, int behaviorID, float spawnX, float spawnY, float spawnZ)
+{
+	EnemyAlloc saved = g_EnemySlots[5];
+
+	g_EnemySlots[5].behaviour = (short)behaviorID;
+	g_EnemySlots[5].modelID = (short)enemyModelID;
+
+	Enemy *enm = g_spawnEnemyFromAllocation(5, spawnX, spawnY, spawnZ);
+	if (enm != NULL)
+	{
+		enm->currentHealth += 1;
+		enm->speed *= 1.5f;
+//		enm->enemyObject->radius *= 2.0f;
+		enm->enemyObject->objectPointer->scale[0] *= 1.0f;
+		enm->enemyObject->objectPointer->scale[1] *= 1.0f;
+		enm->enemyObject->objectPointer->scale[2] *= 1.0f;
+	}
+
+	g_EnemySlots[5] = saved;
+}
+
+void DestroyContainerObject_Hook(ContainerObject* containerObj)
+{
+	float containerPos[3];
+	containerPos[0] = containerObj->object->position[0];
+	containerPos[1] = containerObj->object->position[1];
+	containerPos[2] = containerObj->object->position[2];
+
+	g_destroyContainerObject(containerObj);
+
+	QueueSpawnEnemy(OBJ_MODEL_ENM_HUMANOID_TEST, BEHAVIOR_ENM_WALKING, containerPos[0], containerPos[1], containerPos[2]);
+}
+
 void GlobalUpdate()
 {
 	ComputeControllerInputsEX(); // Update the extended controller inputs
+
+	// Try processing any pending spawns queued because immediate spawn was blocked
+	ProcessPendingSpawns();
 
 
 	//if (ControllerInputsEX[0].ButtonPressed&BTN_L)
@@ -175,6 +302,8 @@ void GlobalUpdate()
 	{
 //		BombRainAroundPlayer(BOMB_TYPE_NORMAL, 2, 50);
 	}
+	Object* playerObj = g_Players[0].PlayerLevelClass->ObjectPointer;
+
 	if (ControllerInputsEX[0].ButtonPressed & BTN_DLEFT)
 	{
 		TestValue--;
@@ -185,7 +314,6 @@ void GlobalUpdate()
 	}
 	if (ControllerInputsEX[0].ButtonPressed & BTN_DUP)
 	{
-		Object* playerObj = g_Players[0].PlayerLevelClass->ObjectPointer;
 //		LevelClass* playerLvl = g_Players[0].PlayerLevelClass;
 //		g_SpawnParticleEffect(effectID, playerObj->position[0], playerObj->position[1] + 160.0f, playerObj->position[2], playerLvl);
 //		g_SpawnParticleEffect(TestValue, 0, 160.0f, 0, playerLvl);
@@ -193,7 +321,9 @@ void GlobalUpdate()
 	}
 	if (ControllerInputsEX[0].ButtonPressed & BTN_DDOWN)
 	{
-		g_spawnContainerObject(0xB+TestValue, 1, 0xD, 0x60);
+//		g_spawnContainerObject(0x2D,0x02,0x16, 0x60);
+//		g_spawnItemType_Grid(ITEM_HEART, 0xB+TestValue, 1, 0xF);
+		SpawnEnemy(OBJ_MODEL_ENM_HUMANOID_TEST, BEHAVIOR_ENM_WALKING, playerObj->position[0] + 350.0f, playerObj->position[1], playerObj->position[2] + 350.0f);
 	}
 	/*
 	for (int i = 0; i < 4; i++)

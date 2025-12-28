@@ -109,6 +109,7 @@
 // ENEMY SYSTEM
 // ============================================================================
 
+.definelabel g_spawnEnemyFromAllocation, 0x802867E4
 .definelabel g_EnemyAllocate, 0x80287008
 .definelabel func_80282430, 0x80282430
 .definelabel func_8028304C, 0x8028304C
@@ -134,8 +135,10 @@
 .definelabel g_getRandomNumber, 0x80234248
 .definelabel g_thresholdPercentage, 0x8025E63C
 .definelabel g_spawnItem, 0x8027B7C4
-.definelabel g_spawnItemType_Grid, 0x8027B8D4
+.definelabel g_spawnItemType_Grid, 0x8027B828
+.definelabel g_spawnItemByChance_Grid, 0x8027B8D4
 .definelabel g_playerThrowHeldObject, 0x80270770
+.definelabel g_containerItemDefinitionPtr, 0x802AFE80
 .definelabel g_ItemSpawnProbabilityTable, 0x802AFE88
 .definelabel g_LastItemIDCollected, 0x802AFECC
 .definelabel g_spawnContainerObject, 0x8026F068
@@ -246,6 +249,7 @@
 .definelabel func_80001A30, 0x80001A30
 .definelabel load_from_rom_to_addr, 0x80000698
 
+.definelabel g_AllocateModelSize, 0x80225B00
 .definelabel g_AllocateModel, 0x8026CE28
 .definelabel g_GetAllocationIndex, 0x8026CD24
 .definelabel g_InitModel, 0x802267E0
