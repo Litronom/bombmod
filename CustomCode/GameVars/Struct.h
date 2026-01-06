@@ -230,13 +230,29 @@ typedef struct CustomParts
 }
 CustomParts;
 
+// LevelClass propertiesFlag
+#define IS_KICKABLE             0x00000002
+#define IS_TANGIBLE             0x00000010
+#define FLATTEN_ON_COLLIDE      0x00000020
+#define BURNS_ON_COLLIDE        0x00000040
+#define DAMAGING_ON_COLLIDE     0x00000100
+#define STUNS_LONG              0x00000200
+#define STUNS_MEDIUM            0x00000400
+#define STUNS_SHORT             0x00000800
+#define BOUNCES                 0x00001000
+#define IS_FLASHING             0x00040000
+#define IS_TRANSLUCENT          0x00080000
+#define IS_VISIBLE              0x01000000
+
+
+
 typedef struct LevelClass LevelClass;
 
 typedef struct LevelClass
 {
 	int num;						// 0x00
 	int type;						// 0x04
-	int u1;							// 0x08
+	int propertiesFlag;             // 0x08
 	int u2;							// 0x0C
 	int flag;						// 0x10
 	int u4;							// 0x14
@@ -304,20 +320,24 @@ typedef struct GlobalPlayerState
 GlobalPlayerState;
 
 
-// Player Flag
-#define IS_ON_SLOPE             0x00000010
-#define DISALLOW_USER_INPUT     0x00000020
-#define THROWING_OBJECT         0x00000040
-#define PICKING_UP_OBJECT       0x00000080
-#define KICKING_BOMB            0x00000100
-#define HAS_BOMB_BELOW          0x00000200
-#define CUTSCENE_MOVEMENT       0x00000400
-#define IS_KNOCKED_OUT          0x00001000
-#define HAS_OBJECT_IN_HAND      0x00008000
-#define IS_INTANGIBLE           0x00010000
-#define IS_HURT_SPINNING        0x00020000
-#define CAN_ONLY_TURN           0x00400000
-#define IS_IN_CUTSCENE          0x02000000
+// Player stateFlag - Movement/Terrain States
+#define STATE_ON_SLOPE             0x00000010  // Player is on sloped terrain
+#define STATE_INPUT_DISABLED       0x00000020  // User input is disabled
+#define STATE_MOVEMENT_LOCKED      0x00400000  // Can only turn in place, no movement
+#define STATE_CUTSCENE_MOVE        0x00000400  // Moving under cutscene control
+#define STATE_IN_CUTSCENE          0x02000000  // Currently in cutscene
+
+// Player stateFlag - Action States
+#define STATE_THROWING             0x00000040  // Throwing an object
+#define STATE_PICKING_UP           0x00000080  // Picking up an object
+#define STATE_KICKING              0x00000100  // Kicking a bomb
+#define STATE_HOLDING_OBJECT       0x00008000  // Has object in hand
+#define STATE_BOMB_BELOW           0x00000200  // Standing on a bomb
+
+// Player stateFlag - Status/Condition States
+#define STATE_STUNNED              0x00001000  // Knocked out/stunned
+#define STATE_INTANGIBLE           0x00010000  // Cannot be hit/no collision
+#define STATE_HURT_SPINNING        0x00020000  // Spinning from damage
 
 // Bomb Types
 #define BOMB_TYPE_NORMAL        0x0000
@@ -612,7 +632,7 @@ typedef struct EnemyObject
 {
     int u0;                      // 0x00
     int u1;                      // 0x04
-    int u2;                      // 0x08
+    int propertiesFlag;          // 0x08
     int u3;                      // 0x0C
 	int flags;                   // 0x10 - Stun check 0x40
     int u4[3];                   // 0x14-0x1F

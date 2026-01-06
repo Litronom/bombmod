@@ -61,8 +61,11 @@ int TrySpawnEnemyNow(int modelID, int behaviorID, float x, float y, float z)
 	if (enm != NULL)
 	{
 		// minimal post-spawn tuning
-		enm->currentHealth += 1;
+		enm->currentHealth = 0xFF;
 		enm->speed *= 1.5f;
+		SET_FLAG(enm->enemyObject->propertiesFlag, BOUNCES);
+		CLR_FLAG(enm->enemyObject->propertiesFlag, (STUNS_LONG|STUNS_SHORT|STUNS_MEDIUM));
+		enm->invincibilityFlag = 1;
 
 		g_EnemySlots[5] = saved;
 		return 1;

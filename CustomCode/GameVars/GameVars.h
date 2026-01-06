@@ -89,7 +89,7 @@ extern void g_EffectSimpleSetup(void* param); //0x8028EF58 - Simple effect setup
 extern void g_EffectCollisionTimer(void* param); //0x8028EFE4 - Collision/velocity monitor: checks collision and velocity (0x68/0x6C), timer to 101 frames
 extern void g_EffectCollisionRotate(void* param); //0x8028F08C - Collision check with rotation animation: rotX -50→80°, timer to 101 frames
 extern void g_EffectGravityIDr(); //0x8028F1F0 - Non-standard: $s0=effectPtr, $s1=maxCount, $f22=delta. Applies gravity/falling physics, updates Y position, checks ground collision
-extern void g_EffectRotation4Stage(void* param); //0x8028F320 - 4-stage rotation: <5 adds, 5-9 subtracts, 10-19 idle, >=20 subtracts more
+extern void g_EffectRotation4Stage(void* param); //0x8028float0 - 4-stage rotation: <5 adds, 5-9 subtracts, 10-19 idle, >=20 subtracts more
 extern void g_EffectRotationStages(void* param); //0x8028F428 - Multi-stage rotation: stage 1(<10), stage 2(10-19 adds rotation), stage 3(>=20 subtracts rotation)
 extern void g_EffectTimerCount30(void* param); //0x8028F55C - Increments param->0xC until 30, then triggers effect processing
 extern void g_EffectConditionalProcess(void* param); //0x8028F5E0 - Checks condition with 10.0f, branches to param or value processing
@@ -136,8 +136,6 @@ extern void g_InitPlayers(); //0x80245CDC
 extern void g_PlayerMovement(int num); //0x8024E088
 extern void g_SetupRivalBoss(int playerID, int rivalID, int x, int y, int z); //0x8025DC60
 extern void g_RenderModel(Gfx **dlPtr, s32 baseAddress, s32 attachmentIndex); //0x8022D58C
-extern short g_getRandomNumber(ushort max); //0x80234248 - Returns random number in range 0 to (max-1)
-extern double g_thresholdPercentage(); //0x8025E63C
 extern void g_spawnItem(int itemID, float locX, float locY, float locZ); //0x8027B7C4
 extern bool g_spawnItemType_Grid(short itemID, short posX, short posY, short posZ); //0x8027B828
 extern bool g_spawnItemByChance_Grid(short posX, short posY, short posZ, int patternIndex); //0x8027B8D4
@@ -150,11 +148,47 @@ extern int g_soundIndexCounter; //0x802A13C0
 extern int g_gameFrameCounter; //0x802A13C4
 extern bool g_spawnContainerObject(short posX, short posY, short posZ, short renderFlag); //0x8026F068 - Spawns a container object based on renderFlag at specified position
 extern void g_destroyContainerObject(ContainerObject *cntObj); //0x8027D328
+extern void g_handlePlayerKnockback(int playerID, LevelClass *collidedLevelclass, int collisionFlags); //0x80249648
+
+// ============================================================================
+// MATH
+// ============================================================================
+
+extern int g_RandomIndex; // 0x802ACFE0 - RNG table index
+extern int g_RandomTable[56]; // 0x802ACFE8 - RNG lookup table
+extern double g_RandomScale; // 0x802A3A10 = 1.0 / 1,000,000,000
+
+extern void g_shuffleRandomTable(int *index); // 0x8025E4A0 - Resets / reshuffles RNG table
+extern void g_initRandom(int seed); // 0x8025E6A4 - Initializes RNG with seed
+extern int g_nextRandomRaw(); // 0x8025E5EC - Advances RNG and returns next value
+extern double g_nextRandomDouble(); // 0x8025E63C - Advances RNG and returns next value as double in [0.0, 1.0)
+extern int g_getRandomNumber(int max); //0x80234248 - Returns pseudo-random number in range [0, max]
+
+extern float g_FloatEpsilon; // 0x8029FE30 - Small tolerance for float comparisons (0.0001f)
+
+extern int g_approxEqual(float a, float b); // 0x80233650 - Returns 1 if |a - b| <= g_FloatEpsilon, else 0
+extern int g_approxEqualEps(float a, float b, float eps); // 0x8023369C - Returns 1 if |a - b| <= eps, else 0
+extern int g_approxZero(float a); // 0x802336E4 - Returns 1 if |a| <= g_FloatEpsilon, else 0
+extern int g_inRange(float x, float r); // 0x8023372C - Returns 1 if -r <= x <= r, else 0
+extern int g_cmpWithEpsilon(float a); // 0x80233768 - Returns 1 if a > g_FloatEpsilon, -1 if a < g_FloatEpsilon, else 0
+extern int g_floatCompare(float a, float b); // 0x802337B0 - Returns 1 if a > b, -1 if a < b, else 0
+extern int g_sign(float a); // 0x802337EC - Returns 1 if a > 0, -1 if a < 0, else 0
+
+// ============================================================================
+// CAMERA
+// ============================================================================
+
+extern CameraValues g_CameraValues; //0x80090000
+
+extern float g_CameraMinX; // 0x8009003C - Minimum X coordinate the camera can move to
+extern float g_CameraMaxX; // 0x80090044 - Maximum X coordinate the camera can move to
+extern float g_CameraMinZ; // 0x80090040 - Minimum Z coordinate the camera can move to
+extern float g_CameraMaxZ; // 0x80090048 - Maximum Z coordinate the camera can move to
+
 
 // ============================================================================
 
 extern PlayerPointer g_PlayerPointers[4]; //0x80098C18
-
 
 extern char g_ControllerCount; //0x800270A1
 extern float g_common_shadow_model_scale; //0x802A2DE4
@@ -184,8 +218,6 @@ extern void g_StopSound(int index, int stop); //0x8026C0A8
 extern int g_PlayMusic(short songID); //0x8026C93C
 
 extern int g_PlayMusicValidator; //0x802A1330
-
-extern CameraValues g_CameraValues; //0x80090000
 
 extern void g_InitGameVS(); //0x8023CA94
 

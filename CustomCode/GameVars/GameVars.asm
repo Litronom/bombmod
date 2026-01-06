@@ -132,8 +132,6 @@
 .definelabel g_PlayerMovement, 0x8024E088
 .definelabel g_SetupRivalBoss, 0x8025DC60
 .definelabel g_RenderModel, 0x8022D58C
-.definelabel g_getRandomNumber, 0x80234248
-.definelabel g_thresholdPercentage, 0x8025E63C
 .definelabel g_spawnItem, 0x8027B7C4
 .definelabel g_spawnItemType_Grid, 0x8027B828
 .definelabel g_spawnItemByChance_Grid, 0x8027B8D4
@@ -143,6 +141,42 @@
 .definelabel g_LastItemIDCollected, 0x802AFECC
 .definelabel g_spawnContainerObject, 0x8026F068
 .definelabel g_destroyContainerObject, 0x8027D328
+.definelabel g_handlePlayerKnockback, 0x80249648
+
+// ============================================================================
+// MATH
+// ============================================================================
+
+.definelabel g_RandomIndex, 0x802ACFE0
+.definelabel g_RandomTable, 0x802ACFE8
+.definelabel g_RandomScale, 0x802A3A10
+
+.definelabel g_initRandom, 0x8025E6A4
+.definelabel g_shuffleRandomTable, 0x8025E4A0
+.definelabel g_nextRandomRaw, 0x8025E5EC
+.definelabel g_nextRandomDouble, 0x8025E63C
+.definelabel g_getRandomNumber, 0x80234248
+
+.definelabel g_FloatEpsilon, 0x8029FE30
+
+.definelabel g_approxEqual, 0x80233650
+.definelabel g_approxEqualEps, 0x8023369C
+.definelabel g_approxZero, 0x802336E4
+.definelabel g_inRange, 0x8023372C
+.definelabel g_cmpWithEpsilon, 0x80233768
+.definelabel g_floatCompare, 0x802337B0
+.definelabel g_sign, 0x802337EC
+
+// ============================================================================
+// CAMERA
+// ============================================================================
+
+.definelabel g_CameraValues, 0x80090000
+
+.definelabel g_CameraMinX, 0x8009003C
+.definelabel g_CameraMaxX, 0x80090044
+.definelabel g_CameraMinZ, 0x80090040
+.definelabel g_CameraMaxZ, 0x80090048
 
 // ============================================================================
 
@@ -180,8 +214,6 @@
 
 .definelabel g_PlayMusic, 0x80046390
 .definelabel g_PlayMusicValidator, 0x802A1330
-
-.definelabel g_CameraValues, 0x80090000
 
 .definelabel g_InitGameVS, 0x8023CA94
 
