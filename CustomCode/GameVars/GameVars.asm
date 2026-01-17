@@ -1,9 +1,18 @@
 // ============================================================================
+// OS
+// ============================================================================
+
+.definelabel osGetIntMask, 0x80010BC0
+.definelabel osSetIntMask, 0x80010BE0
+.definelabel gInterruptMask, 0x8001B1E4
+
+// ============================================================================
 // GLOBAL DATA
 // ============================================================================
 
 .definelabel g_GraphPtr, 0x80024748
 .definelabel g_ControllerInputs, 0x80027060
+.definelabel g_ExplosionComponents, 0x8008E658
 .definelabel g_Bombs, 0x8008F4C0
 .definelabel g_LevelClasses, 0x800A3F00
 .definelabel g_HUDObject, 0x800A0DA0
@@ -142,6 +151,36 @@
 .definelabel g_spawnContainerObject, 0x8026F068
 .definelabel g_destroyContainerObject, 0x8027D328
 .definelabel g_handlePlayerKnockback, 0x80249648
+.definelabel g_SubtractPlayerBombCount, 0x80277AA0
+.definelabel g_AddPlayerBombCount, 0x80277AF8
+.definelabel g_SubtractPlayerFirePower, 0x80278E28
+.definelabel g_AddPlayerFirePower, 0x80278E84
+
+// ============================================================================
+// BOMB SYSTEM
+// ============================================================================
+
+.definelabel g_BombSpawnLocation, 0x802AFE60
+.definelabel g_ExplosionCounter, 0x802AFE70
+
+.definelabel g_SpawnPlayerBomb, 0x80273F30
+.definelabel g_spawnBomb, 0x8027361C
+.definelabel g_UpdateBomb, 0x8027655C
+
+.definelabel g_ConvertBomb2ExplosionPosition, 0x80275120
+.definelabel g_SpawnPumpedRedBombExplosion, 0x80275590
+.definelabel g_SpawnPumpedBombExplosion, 0x802756DC
+.definelabel g_SpawnBombExplosion, 0x802752BC
+.definelabel g_SpawnRedBombExplosion, 0x802757E0
+.definelabel g_BombExplosionRoutine, 0x80275948
+.definelabel g_GetExplosionFlags, 0x80277F0C
+.definelabel g_FindFreeExplosionSlot, 0x80277F74
+.definelabel g_SpawnExplosion, 0x80277FC4
+.definelabel g_CleanupExplosion, 0x80278740
+.definelabel g_ExplosionAnimateDecay, 0x80278788
+.definelabel g_ExplosionAnimateRotation, 0x802787E4
+.definelabel g_UpdateExplosion, 0x80278D54
+.definelabel g_ClearAllExplosions, 0x80278DBC
 
 // ============================================================================
 // MATH
@@ -166,6 +205,9 @@
 .definelabel g_cmpWithEpsilon, 0x80233768
 .definelabel g_floatCompare, 0x802337B0
 .definelabel g_sign, 0x802337EC
+
+.definelabel g_WorldToGridCoords, 0x8026DCAC
+.definelabel g_GetObjectGridPosition, 0x80277A28
 
 // ============================================================================
 // CAMERA
@@ -205,8 +247,6 @@
 .definelabel AdditionalUpdate, 0x80247614
 .definelabel FinalizeFrameUpdate, 0x80239094
 
-.definelabel g_BombSpawnLocation, 0x802AFE60
-.definelabel g_SpawnPlayerBomb, 0x80273F30
 .definelabel g_PickupGem, 0x8026C93C
 .definelabel g_PlayGlobalSound, 0x8026C660
 .definelabel g_PlayLocalSound, 0x8026C51C
@@ -227,7 +267,6 @@
 .definelabel SomeBoolStruct2, 0x802AC820
 
 .definelabel func_80273E2C, 0x80273E2C
-.definelabel g_spawnBomb, 0x8027361C
 .definelabel func_80273AD4, 0x80273AD4
 
 .definelabel func_80277E1C, 0x80277E1C

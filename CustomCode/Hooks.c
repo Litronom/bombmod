@@ -1,6 +1,6 @@
 #include "MainInclude.h"
 
-int SpawnPlayerBomb_Hook(short bombType, int locX, int locY, int locZ, short playerID)
+Bomb* SpawnPlayerBomb_Hook(short bombType, int locX, int locY, int locZ, short playerID)
 {
     // Early out if the player ID is invalid
     if (playerID < 0 || playerID >= 5)

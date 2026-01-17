@@ -460,6 +460,19 @@ typedef struct PlayerPointer
 }
 PlayerPointer;
 
+// Bomb State Flags
+#define BOMB_STATE_EXPLODING                   0x0001
+#define BOMB_STATE_EXPLODE_TIMER_ACTIVE        0x0002
+#define BOMB_STATE_ROLLING                     0x0004
+#define BOMB_STATE_KICKED                      0x0008
+#define BOMB_STATE_HELD_BY_PLAYER              0x0010
+#define BOMB_STATE_DEFLATING                   0x0020
+#define BOMB_STATE_PUMPED_UP                   0x0080
+#define BOMB_STATE_IN_AIR                      0x0200
+#define BOMB_STATE_PLAYER_ALREADY_INTERACTED   0x0400
+#define BOMB_STATE_GROUNDED                    0x0800
+
+
 typedef struct Bomb
 {
 	short num;                     //0x00
@@ -487,7 +500,8 @@ typedef struct Bomb
 	int u14;                       //0x5C
 	short inflate_timer;           //0x60
 	short u15;                     //0x62
-	int state_flag;                //0x64
+	short state_flag;              //0x64
+	short firePower;               //0x66
 	short explode_timer;           //0x68
 	short unk_flag2;               //0x6A
 	int u16;                       //0x6C
@@ -496,6 +510,42 @@ typedef struct Bomb
 	float unk_float2[4];           //0x78-0x84
 }
 Bomb;
+
+// Explosion Component Types
+#define EXPLOSION_COMPONENT_SPHERE          0  // Sphere
+#define EXPLOSION_COMPONENT_SPHERE2         1  // Sphere
+#define EXPLOSION_COMPONENT_SPHERE3         2  // Sphere
+#define EXPLOSION_COMPONENT_OUTER_SPIKES    3  // Outer spikes
+#define EXPLOSION_COMPONENT_SPIKE_SPHERE    4  // Spike sphere
+#define EXPLOSION_COMPONENT_RING            5  // Blue ring
+#define EXPLOSION_COMPONENT_INNER_SPIKES    6  // Inner spikes
+#define EXPLOSION_COMPONENT_SPARKS          7  // Red sparks
+#define EXPLOSION_COMPONENT_WHITE_BLAST     8  // White blast
+
+typedef struct ExplosionComponent
+{
+	short num;                     //0x00 - Slot index in g_ExplosionComponents array
+	short flag;                    //0x02
+	int u1;                        //0x04
+	void *spawnDataPtr;            //0x08 - Pointer to spawn data/parameters
+	short animPattern;             //0x0C - Animation pattern selector (set to 1 on spawn, used in state machine)
+	short componentType;           //0x0E - Explosion component type (0=sphere,5=ring,6=spikes)
+	short firePowerLevel;          //0x10 - Fire power level (affects size/damage)
+	short u4;                      //0x12
+	LevelClass *levelClass;        //0x14 - LevelClass for the 3D explosion mesh (handles collision/damage)
+	Object *explosionObject;       //0x18 - Pointer to Object for visual rendering (levelClass->ObjectPointer)
+	float spawnPosition[3];        //0x1C-0x24 - XYZ position where explosion spawned (Y can be modified by velocity)
+	float scale[3];                //0x28-0x30 - XYZ scale (set based on explosion type: 1.5f or 2.0f)
+	int u5;                        //0x34
+	short rotationSpeed;           //0x36 - Rotation speed increment per frame (range: 3-9 depending on type/bomb)
+	short rotationAngle;           //0x38 - Current rotation angle counter (wraps at 360)
+	short animTimer;               //0x3A - Animation timer (calculated as 90/randomValue for some types)
+	float expansionRadius;         //0x3C - Expansion radius/size (range: 3.0-12.0 based on firePowerLevel 3-9)
+	float u9;                      //0x40 - Set to 0.0 on spawn
+	short u10;                     //0x44 - From spawn parameter at offset 0x56
+	short playerID;                //0x46 - Player ID who spawned this explosion (from spawn parameter at 0x4A)
+}
+ExplosionComponent;
 
 // HeldObject flag bits (used to select throw handlers)
 #define HELD_FLAG_PLAYER 0x1   // Hold another player/rival

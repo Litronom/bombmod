@@ -206,6 +206,7 @@ void ItemRainAroundPlayer(int itemID, int radius, int chance)
 	}
 }
 
+
 void BombRainAroundPlayer(int bombType, int radius, int chance)
 {
 	if (!g_PauseFlag && g_Players[0].controlType == 1 && g_Players[0].heartCount > 0 && g_GameState.delta_time != 0.0f)
@@ -216,7 +217,15 @@ void BombRainAroundPlayer(int bombType, int radius, int chance)
 			float PosX = playerObj->position[0] + (float)(g_getRandomNumber(radius * 2 + 1) - radius) * 100.0f;
 			float PosY = playerObj->position[1] + 1000.0f;
 			float PosZ = playerObj->position[2] + (float)(g_getRandomNumber(radius * 2 + 1) - radius) * 100.0f;
-			g_spawnBomb(bombType, PosX, PosY, PosZ, 4);
+			Bomb* bomb = g_spawnBomb(bombType, PosX, PosY, PosZ, 3);
+			bomb->flag = 8;
+		}
+		for (int bom = 0; bom < 30; bom++)
+		{
+			if (g_Bombs[bom].state_flag&BOMB_STATE_GROUNDED && g_Bombs[bom].flag&0x8)
+			{
+				SET_FLAG(g_Bombs[bom].state_flag, BOMB_STATE_EXPLODING); 
+			}
 		}
 	}
 }
@@ -303,7 +312,7 @@ void GlobalUpdate()
 	}
 	if (g_CurrentScreenID >= 0x28)
 	{
-//		BombRainAroundPlayer(BOMB_TYPE_NORMAL, 2, 50);
+		BombRainAroundPlayer(BOMB_TYPE_NORMAL, 2, 50);
 	}
 	Object* playerObj = g_Players[0].PlayerLevelClass->ObjectPointer;
 

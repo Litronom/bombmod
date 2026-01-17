@@ -1,11 +1,20 @@
 #include "../MainInclude.h"
 
 // ============================================================================
+// OS
+// ============================================================================
+
+extern OSIntMask osGetIntMask(void); //0x80010BC0
+extern OSIntMask osSetIntMask(OSIntMask im); //0x80010BE0
+extern ushort* gInterruptMask; // 0x8001B1E4
+
+// ============================================================================
 // GLOBAL DATA
 // ============================================================================
 
 extern Gfx *GFXgraphPtr; //0x80024748
 extern Controller g_ControllerInputs[4]; //0x80027060
+extern ExplosionComponent g_ExplosionComponents[48]; //0x8008E658
 extern Bomb g_Bombs[]; //0x8008F4C0
 extern LevelClass g_LevelClasses[]; //0x800A3F00
 extern Object g_HUDObject; //0x800A0DA0
@@ -149,6 +158,39 @@ extern int g_gameFrameCounter; //0x802A13C4
 extern bool g_spawnContainerObject(short posX, short posY, short posZ, short renderFlag); //0x8026F068 - Spawns a container object based on renderFlag at specified position
 extern void g_destroyContainerObject(ContainerObject *cntObj); //0x8027D328
 extern void g_handlePlayerKnockback(int playerID, LevelClass *collidedLevelclass, int collisionFlags); //0x80249648
+extern void g_SubtractPlayerBombCount(short playerID, short amount); //0x80277AA0 - Subtracts from player's bomb count, clamps minimum to 1
+extern void g_AddPlayerBombCount(short playerID, short amount); //0x80277AF8 - Adds to player's bomb count, caps at 8
+extern void g_SubtractPlayerFirePower(short playerID, short amount); //0x80278E28 - Subtracts from player's fire power, clamps minimum to 2
+extern void g_AddPlayerFirePower(short playerID, short amount); //0x80278E84 - Adds to player's fire power, caps at 7 if player has red bombs, otherwise caps at 4
+
+
+// ============================================================================
+// BOMB SYSTEM
+// ============================================================================
+
+extern float g_BombSpawnLocation[3]; //0x802AFE60 - Temporary storage for bomb spawn position (X,Y,Z)
+extern short g_ExplosionCounter; //0x802AFE70 - Global explosion counter, incremented each spawn
+
+extern Bomb* g_SpawnPlayerBomb(short bombType, int float_locX, int float_locY, int float_locZ, short playerID); //0x80273F30 - Player bomb spawn wrapper (validates position/player, calls g_spawnBomb)
+extern Bomb* g_spawnBomb(short bombType, float posX, float posY, float posZ, short playerID); //0x8027361C - Spawns and initializes new bomb, returns pointer to bomb or NULL if spawn fails
+extern int g_UpdateBomb(Bomb* bomb); //0x8027655C - Main bomb update loop (runs every frame: decrements timer, handles physics/collision, triggers explosion, spawns trail bombs)
+
+extern void g_BombExplosionRoutine(Bomb* bomb); //0x80275948 - Main bomb explosion handler (dispatches to appropriate spawn function based on bomb flags, plays sound, updates components until finished)
+extern void g_SpawnBombExplosion(Bomb* bomb); //0x802752BC - Spawns explosion components from bomb data (reads playerID, firePower, position, flags; spawns sphere/rings/spikes based on bomb type)
+extern void g_SpawnPumpedBombExplosion(Bomb* bomb); //0x802756DC - Spawns pumped up normal bomb explosion (spawns: type 3 at ground level, type 0 sphere with upward velocity 8.0)
+extern void g_SpawnRedBombExplosion(Bomb* bomb); //0x802757E0 - Spawns red bomb explosion components (spawns: sphere type 0, plus types 5 and 6; checks flag 0x4 for type 8, flag 0x100 for type 9)
+extern void g_SpawnPumpedRedBombExplosion(Bomb* bomb); //0x80275590 - Spawns pumped up red bomb explosion (spawns: type 3 at ground, type 5 ring at ground, type 0 sphere with velocity 8.0)
+extern ExplosionComponent* g_SpawnExplosion(short playerID, short componentType, short explosionFlags, float velocityY, short rotSpeed, float posX, float posY, float posZ, short firePower, ExplosionComponent** outPtr); //0x80277FC4 - Spawn explosion component (componentType: 0=sphere,1/2=center,4/7/8=rings/spikes; writes to *outPtr and returns same pointer)
+
+extern void g_ConvertBomb2ExplosionPosition(float inX, float inY, float inZ, float* outX, float* outY, float* outZ); //0x80275120 - Converts bomb position to explosion spawn coordinates (calls g_WorldToGridCoords, applies fractional offsets and Y-clamping)
+extern int g_GetExplosionFlags(ExplosionComponent* explosion); //0x80277F0C - Checks explosion->firePowerLevel (offset 0x10), masks with 0xF1FD, returns 0x40/0x10/0 based on pattern
+extern short g_FindFreeExplosionSlot(); //0x80277F74 - Iterates g_ExplosionComponents[48], returns first index where explosionObject==NULL, or -1 if all occupied
+extern void g_CleanupExplosion(ExplosionComponent* explosion); //0x80278740 - Cleanup individual explosion component (frees LevelClass, clears data)
+extern void g_ExplosionAnimateDecay(ExplosionComponent* explosion, ExplosionComponent* explosionCopy); //0x80278788 - Explosion animation pattern case 2
+extern void g_ExplosionAnimateRotation(ExplosionComponent* explosion, ExplosionComponent* explosionCopy); //0x802787E4 - Explosion animation pattern case 1 (rotating/expanding with sin/cos)
+extern void g_UpdateExplosion(ExplosionComponent* explosion); //0x80278D54 - Main explosion update loop (applies animation to LevelClass, dispatches to animation cases)
+extern void g_ClearAllExplosions(); //0x80278DBC - Clears all 48 explosion component slots, resets g_ExplosionCounter to 0
+
 
 // ============================================================================
 // MATH
@@ -158,8 +200,8 @@ extern int g_RandomIndex; // 0x802ACFE0 - RNG table index
 extern int g_RandomTable[56]; // 0x802ACFE8 - RNG lookup table
 extern double g_RandomScale; // 0x802A3A10 = 1.0 / 1,000,000,000
 
-extern void g_shuffleRandomTable(int *index); // 0x8025E4A0 - Resets / reshuffles RNG table
 extern void g_initRandom(int seed); // 0x8025E6A4 - Initializes RNG with seed
+extern void g_shuffleRandomTable(); // 0x8025E4A0 - Resets / reshuffles RNG table
 extern int g_nextRandomRaw(); // 0x8025E5EC - Advances RNG and returns next value
 extern double g_nextRandomDouble(); // 0x8025E63C - Advances RNG and returns next value as double in [0.0, 1.0)
 extern int g_getRandomNumber(int max); //0x80234248 - Returns pseudo-random number in range [0, max]
@@ -173,6 +215,9 @@ extern int g_inRange(float x, float r); // 0x8023372C - Returns 1 if -r <= x <= 
 extern int g_cmpWithEpsilon(float a); // 0x80233768 - Returns 1 if a > g_FloatEpsilon, -1 if a < g_FloatEpsilon, else 0
 extern int g_floatCompare(float a, float b); // 0x802337B0 - Returns 1 if a > b, -1 if a < b, else 0
 extern int g_sign(float a); // 0x802337EC - Returns 1 if a > 0, -1 if a < 0, else 0
+
+extern void g_WorldToGridCoords(float worldX, float worldY, float worldZ, void* outGridCoords, int flags); // 0x8026DCAC - Converts world coordinates to grid coordinates with fractional offsets
+extern void g_GetObjectGridPosition(void* object, float* outGridX, float* outGridY, float* outGridZ); // 0x80277A28 - Gets object's grid position (wrapper for g_WorldToGridCoords)
 
 // ============================================================================
 // CAMERA
@@ -205,8 +250,6 @@ extern void UpdateRenderFrame(); //0x802259F4
 extern void AdditionalUpdate(); //0x80247614
 extern void FinalizeFrameUpdate(); //0x80239094
 
-extern float g_BombSpawnLocation[3]; //0x802AFE60
-extern int g_SpawnPlayerBomb(short bombType, int float_locX, int float_locY, int float_locZ, short playerID); //0x80273F30
 extern void g_PickupGem(); //0x802794FC
 //extern void PlayGlobalSound(int soundID, LevelClass *class); //0x8026C660
 extern void g_PlayGlobalSound(int soundID); //0x8026C660
@@ -231,7 +274,6 @@ extern BoolStruct SomeBoolStruct1; //0x802AC760
 extern BoolStruct SomeBoolStruct2; //0x802AC820
 
 extern void func_80273E2C(short playerID); //0x80273E2C
-extern int g_spawnBomb(short bombType, float posX, float posY, float posZ, short playerID); //0x8027361C
 extern int func_80273AD4(short A16, int A32, int B32, int C32); //0x80273AD4
 
 extern void func_80277E1C(); //0x80277E1C
